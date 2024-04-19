@@ -1,7 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:scrumptious/data/dummy_data.dart';
+import 'package:scrumptious/screens/meals/meals.dart';
+import 'package:scrumptious/widgets/category_grid_item.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
+
+  void _selectCategory(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (ctx) => const MealsScreen(
+          strTitle: "Some title", 
+          arrMeals: []
+        )
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -15,11 +29,20 @@ class CategoriesScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Pick your SCRUMptious Category"),
+        title: const Text('Pick a "SCRUM"ptious Category'),
       ),
       body: GridView(
-        gridDelegate: grid
-        children: [],
+        padding: const EdgeInsets.all(8),
+        gridDelegate: grid,
+        children: [
+          for (final mdlCategory in availableCategories) 
+            CategoryGridItem(
+              mdlCategory: mdlCategory, 
+              onSelectCategory: () {
+                _selectCategory(context);
+              }
+            )      
+        ],
       )
     );
   }
