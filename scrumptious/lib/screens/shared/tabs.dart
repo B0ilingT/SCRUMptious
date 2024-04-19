@@ -25,9 +25,7 @@ class _TabsScreenState extends State<TabsScreen> {
       _intSelectedPageIndex = index;
     });
   }
-
-
-
+  
   @override
   Widget build(BuildContext context) {
     Widget activePage = const CategoriesScreen();
@@ -35,7 +33,6 @@ class _TabsScreenState extends State<TabsScreen> {
     if (_intSelectedPageIndex == 1) {
       activePage = MealsScreen(arrMeals: [], mdlCategory: favourites);
     }
-
 
     return Scaffold(
       body: activePage,
