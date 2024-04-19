@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/screens/meals/meal_details.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
@@ -14,6 +15,12 @@ class MealsScreen extends StatelessWidget {
 
   final Category mdlCategory;
   final List<Meal> arrMeals;
+
+  void selectMeal(BuildContext context, Meal mdlMeal){
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (ctx) => MealDetailsScreen(mdlMeal: mdlMeal))
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +52,13 @@ class MealsScreen extends StatelessWidget {
       content = ListView.builder(
         itemCount: arrMeals.length,
         itemBuilder: (
-          (context, index) => MealItem(mdlMeal: arrMeals[index], mdlCategory: mdlCategory,)
+          (context, index) => MealItem(
+            mdlMeal: arrMeals[index], 
+            mdlCategory: mdlCategory, 
+            onSelectMeal: (mdlMeal){
+              selectMeal(context, mdlMeal);
+            },
+          )
         )
       );
     }

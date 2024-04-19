@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/widgets/meals/meal_item_trait.dart';
 import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
@@ -8,12 +9,30 @@ class MealItem extends StatelessWidget {
     {
       super.key,
       required this.mdlMeal,
-      required this.mdlCategory
+      required this.mdlCategory,
+      required this.onSelectMeal
     }
   );
 
   final Meal mdlMeal;
   final Category mdlCategory;
+  final void Function(Meal mdlMeal) onSelectMeal;
+
+  String get complexityText {
+    String strName = mdlMeal.enumComplexity.name;
+    return '${strName[0].toUpperCase()}${strName.substring(1)}';
+  }
+
+  String get affordabilityText {
+    switch (mdlMeal.enumAffordability) {
+      case Affordability.affordable:
+        return '£';
+      case Affordability.pricey:
+        return '££';
+      case Affordability.luxurious:
+        return '£££';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -24,13 +43,19 @@ class MealItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(8)
       ),
       clipBehavior: Clip.hardEdge,
+      elevation: 2,
       child: InkWell(
-        onTap: () {},
+        onTap: () {
+          onSelectMeal(mdlMeal);
+        },
         child: Stack(
           children: [
             FadeInImage(
               placeholder: MemoryImage(kTransparentImage), 
-              image: NetworkImage(mdlMeal.strImageUrl)
+              image: NetworkImage(mdlMeal.strImageUrl),
+              fit: BoxFit.cover,
+              height: 200,
+              width: double.infinity,
             ),
             Positioned(
               bottom: 0,
@@ -55,7 +80,23 @@ class MealItem extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                     Row(
-                      children: [],
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        MealItemTrait(
+                          icon: Icons.schedule, 
+                          strLabel: '${mdlMeal.intDuration.toString()}m'
+                        ),
+                        const SizedBox(width: 12),
+                        MealItemTrait(
+                          icon: Icons.assessment_outlined, 
+                          strLabel: complexityText
+                        ),
+                        const SizedBox(width: 12),
+                        MealItemTrait(
+                          icon: Icons.remove, 
+                          strLabel: affordabilityText
+                        ),
+                      ],
                     )
                   ],
                 ),

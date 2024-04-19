@@ -96,7 +96,7 @@ const dummyMeals = [
     arrCategories: [
       'c2',
     ],
-    strTitle: 'Toast Hawaii',
+    strTitle: 'Hawaii toast',
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
     strImageUrl:
@@ -110,7 +110,7 @@ const dummyMeals = [
       'Butter'
     ],
     arrSteps: [
-      'Butter one sstrIde of the white bread',
+      'Butter one side of the white bread',
       'Layer ham, the pineapple and cheese on the white bread',
       'Bake the toast for round about 10 minutes in the oven at 200°C'
     ],
@@ -173,10 +173,10 @@ const dummyMeals = [
       'Lemon Slices'
     ],
     arrSteps: [
-      'Tenderize the veal to about 2–4mm, and salt on both sstrIdes.',
+      'Tenderize the veal to about 2–4mm, and salt on both sides.',
       'On a flat plate, stir the eggs briefly with a fork.',
       'Lightly coat the cutlets in flour then dip into the egg, and finally, coat in breadcrumbs.',
-      'Heat the butter and oil in a large pan (allow the fat to get very hot) and fry the schnitzels until golden brown on both sstrIdes.',
+      'Heat the butter and oil in a large pan (allow the fat to get very hot) and fry the schnitzels until golden brown on both sides.',
       'Make sure to toss the pan regularly so that the schnitzels are surrounded by oil and the crumbing becomes ‘fluffy’.',
       'Remove, and drain on kitchen paper. Fry the parsley in the remaining oil and drain.',
       'Place the schnitzels on awarmed plate and serve garnishedwith parsley and slices of lemon.'
@@ -282,7 +282,7 @@ const dummyMeals = [
       'In a large bowl, sift together the flour, baking powder, salt and sugar.',
       'Make a well in the center and pour in the milk, egg and melted butter; mix until smooth.',
       'Heat a lightly oiled grstrIddle or frying pan over medium high heat.',
-      'Pour or scoop the batter onto the grstrIddle, using approximately 1/4 cup for each pancake. Brown on both sstrIdes and serve hot.'
+      'Pour or scoop the batter onto the grstrIddle, using approximately 1/4 cup for each pancake. Brown on both sides and serve hot.'
     ],
     bIsGlutenFree: true,
     bIsVegan: false,
@@ -349,7 +349,7 @@ const dummyMeals = [
     ],
     arrSteps: [
       'Preheat oven to 190°C. Line a rimmed baking sheet with parchment paper.',
-      'Brush bottom and sstrIdes of 2 ramekins lightly with 1 teaspoon melted butter; cover bottom and sstrIdes right up to the rim.',
+      'Brush bottom and sides of 2 ramekins lightly with 1 teaspoon melted butter; cover bottom and sides right up to the rim.',
       'Add 1 tablespoon white sugar to ramekins. Rotate ramekins until sugar coats all surfaces.',
       'Place chocolate pieces in a metal mixing bowl.',
       'Place bowl over a pan of about 3 cups hot water over low heat.',
