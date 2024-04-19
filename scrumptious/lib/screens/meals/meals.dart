@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/widgets/meals/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
   const MealsScreen(
@@ -42,9 +43,7 @@ class MealsScreen extends StatelessWidget {
       content = ListView.builder(
         itemCount: arrMeals.length,
         itemBuilder: (
-          (context, index) => Text(
-            arrMeals[index].strTitle
-          )
+          (context, index) => MealItem(mdlMeal: arrMeals[index])
         )
       );
     }

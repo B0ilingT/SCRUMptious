@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/data/dummy_data.dart';
+import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
-import 'package:scrumptious/widgets/category_grid_item.dart';
+import 'package:scrumptious/widgets/categories/category_grid_item.dart';
 
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen({super.key});
 
-  void _selectCategory(BuildContext context) {
+  void _selectCategory(BuildContext context, Category mdlCategory) {
+    final arrFilteredMeals = dummyMeals.where(
+      (objMeal) => objMeal.arrCategories.contains(mdlCategory.strId)
+    ).toList();
+
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (ctx) => const MealsScreen(
-          strTitle: "Some title", 
-          arrMeals: []
+        builder: (ctx) => MealsScreen(
+          strTitle: mdlCategory.strTitle, 
+          arrMeals: arrFilteredMeals
         )
       )
     );
@@ -39,7 +44,7 @@ class CategoriesScreen extends StatelessWidget {
             CategoryGridItem(
               mdlCategory: mdlCategory, 
               onSelectCategory: () {
-                _selectCategory(context);
+                _selectCategory(context, mdlCategory);
               }
             )      
         ],
