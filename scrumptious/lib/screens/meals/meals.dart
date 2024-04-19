@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
@@ -6,17 +7,18 @@ class MealsScreen extends StatelessWidget {
   const MealsScreen(
     {
       super.key,
-      required this.strTitle,
-      required this.arrMeals
+      required this.arrMeals,
+      required this.mdlCategory
     }
   );
 
-  final String strTitle;
+  final Category mdlCategory;
   final List<Meal> arrMeals;
 
   @override
   Widget build(BuildContext context) {
     Widget content;
+    final String strTitle = mdlCategory.strTitle;
 
     if (arrMeals.isEmpty) {
       content = Center(
@@ -43,7 +45,7 @@ class MealsScreen extends StatelessWidget {
       content = ListView.builder(
         itemCount: arrMeals.length,
         itemBuilder: (
-          (context, index) => MealItem(mdlMeal: arrMeals[index])
+          (context, index) => MealItem(mdlMeal: arrMeals[index], mdlCategory: mdlCategory,)
         )
       );
     }
