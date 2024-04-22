@@ -6,19 +6,22 @@ import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:scrumptious/widgets/categories/category_grid_item.dart';
 import 'package:scrumptious/widgets/main_drawer.dart';
 
+
 class CategoriesScreen extends StatelessWidget {
   const CategoriesScreen(
     {
       super.key,
-      required this.onToggleFavourite
+      required this.onToggleFavourite,
+      required this.onSetScreen,
+      required this.availableMeals
     }
   );
-
+  final List<Meal> availableMeals;
   final void Function(Meal mdlMeal) onToggleFavourite;
-
+  final void Function(String strIdentifier) onSetScreen;
 
   void _selectCategory(BuildContext context, Category mdlCategory) {
-    final arrFilteredMeals = dummyMeals.where(
+    final arrFilteredMeals = availableMeals.where(
       (objMeal) => objMeal.arrCategories.contains(mdlCategory.strId)
     ).toList();
 
@@ -47,7 +50,7 @@ class CategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Pick a "SCRUM"ptious Category'),
       ),
-      drawer: const MainDrawer(),
+      drawer: MainDrawer(onTapDrawerTile: onSetScreen),
       body: GridView(
         padding: const EdgeInsets.all(8),
         gridDelegate: grid,

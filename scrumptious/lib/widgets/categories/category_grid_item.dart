@@ -13,15 +13,6 @@ class CategoryGridItem extends StatelessWidget {
   final Category mdlCategory;
   final void Function() onSelectCategory;
 
-  // void _getMeals(BuildContext context) {
-  //   List<String> arrMealTitles = [];
-  //   for (final mdlMeal in dummyMeals) {
-  //     if (mdlMeal.arrCategories.contains(mdlCategory.strId)) {
-  //       arrMealTitles.add(mdlMeal.strTitle);
-  //     }
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return InkWell(

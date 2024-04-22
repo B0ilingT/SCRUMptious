@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
-import 'package:scrumptious/widgets/main_drawer.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {

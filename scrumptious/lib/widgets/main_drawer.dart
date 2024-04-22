@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:scrumptious/data/globals.dart' as globals;
 
 class MainDrawer extends StatelessWidget {
   const MainDrawer(
     {
-      super.key
+      super.key,
+      required this.onTapDrawerTile
     }
   );
+
+  final void Function(String strIdentifier) onTapDrawerTile;
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +39,46 @@ class MainDrawer extends StatelessWidget {
               Text(
                 "Slicin`",
                 style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                  color: Theme.of(context).colorScheme.primary
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 36
                 ),
               ),
               ]
             )
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.restaurant, 
+              size: 26,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            title: Text(
+              globals.strMealsTitle, 
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontSize: 24
+              ),
+            ),
+            onTap: () {
+              onTapDrawerTile(globals.strMealsTitle);
+            },
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.filter_list, 
+              size: 26,
+              color: Theme.of(context).colorScheme.onBackground,
+            ),
+            title: Text(
+              globals.strFiltersTitle, 
+              style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontSize: 24
+              ),
+            ),
+            onTap: () {
+              onTapDrawerTile(globals.strFiltersTitle);
+            },
           )
         ],
       )
