@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
+import 'package:scrumptious/widgets/main_drawer.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
 class MealsScreen extends StatelessWidget {
@@ -9,16 +10,23 @@ class MealsScreen extends StatelessWidget {
     {
       super.key,
       required this.arrMeals,
-      required this.mdlCategory
+      required this.mdlCategory,
+      required this.onToggleFavourite,
     }
   );
 
   final Category mdlCategory;
   final List<Meal> arrMeals;
+  final void Function(Meal mdlMeal) onToggleFavourite;
 
   void selectMeal(BuildContext context, Meal mdlMeal){
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (ctx) => MealDetailsScreen(mdlMeal: mdlMeal))
+      MaterialPageRoute(
+        builder: (ctx) => MealDetailsScreen(
+          mdlMeal: mdlMeal,
+          onToggleFavourite: onToggleFavourite ,
+        )
+      )
     );
   }
 

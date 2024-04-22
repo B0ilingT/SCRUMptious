@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
+import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/categories/categories.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 
@@ -13,6 +14,30 @@ class TabsScreen extends StatefulWidget {
 
 class _TabsScreenState extends State<TabsScreen> {
   int _intSelectedPageIndex = 0;
+  final List<Meal> _arrFavouriteMeals = [];
+
+  void _showInfoMessage(String strMessage) {
+    ScaffoldMessenger.of(context).clearSnackBars();
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(strMessage),
+      )
+    );
+  }
+
+  void _toggleMealFavouriteStatus(Meal mdlMeal) {
+    if (_arrFavouriteMeals.contains(mdlMeal)) {
+      setState(() {
+        _arrFavouriteMeals.remove(mdlMeal);    
+      });
+      _showInfoMessage("Meal is no longer a favourite!");
+    } else {
+      setState(() {
+        _arrFavouriteMeals.add(mdlMeal);
+      });
+      _showInfoMessage("Added meal to favourites!");
+    }
+  }
 
   Category favourites = const Category(
     strId: 'c0', 
@@ -28,10 +53,14 @@ class _TabsScreenState extends State<TabsScreen> {
   
   @override
   Widget build(BuildContext context) {
-    Widget activePage = const CategoriesScreen();
+    Widget activePage = CategoriesScreen(onToggleFavourite: _toggleMealFavouriteStatus);
 
     if (_intSelectedPageIndex == 1) {
-      activePage = MealsScreen(arrMeals: [], mdlCategory: favourites);
+      activePage = MealsScreen(
+        arrMeals: _arrFavouriteMeals, 
+        mdlCategory: favourites, 
+        onToggleFavourite: _toggleMealFavouriteStatus,
+      );
     }
 
     return Scaffold(

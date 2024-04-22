@@ -6,10 +6,12 @@ class MealDetailsScreen extends StatelessWidget{
     {
       super.key,
       required this.mdlMeal,
+      required this.onToggleFavourite,
     }
   );
 
   final Meal mdlMeal;
+  final void Function(Meal mdlMeal) onToggleFavourite;
 
   String _getStepText(String strStep) {
     int intStepNumber = mdlMeal.arrSteps.indexOf(strStep) + 1;
@@ -20,7 +22,15 @@ class MealDetailsScreen extends StatelessWidget{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(mdlMeal.strTitle)
+        title: Text(mdlMeal.strTitle),
+        actions: [
+          IconButton(
+            onPressed: () {
+              onToggleFavourite(mdlMeal);
+            }, 
+            icon: const Icon(Icons.star)
+          )
+        ],
       ),
       body: SingleChildScrollView(
         child: Column(

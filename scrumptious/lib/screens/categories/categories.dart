@@ -1,11 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/models/category.dart';
+import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:scrumptious/widgets/categories/category_grid_item.dart';
+import 'package:scrumptious/widgets/main_drawer.dart';
 
 class CategoriesScreen extends StatelessWidget {
-  const CategoriesScreen({super.key});
+  const CategoriesScreen(
+    {
+      super.key,
+      required this.onToggleFavourite
+    }
+  );
+
+  final void Function(Meal mdlMeal) onToggleFavourite;
+
 
   void _selectCategory(BuildContext context, Category mdlCategory) {
     final arrFilteredMeals = dummyMeals.where(
@@ -16,7 +26,8 @@ class CategoriesScreen extends StatelessWidget {
       MaterialPageRoute(
         builder: (ctx) => MealsScreen(
           mdlCategory: mdlCategory, 
-          arrMeals: arrFilteredMeals
+          arrMeals: arrFilteredMeals,
+          onToggleFavourite: onToggleFavourite,
         )
       )
     );
@@ -36,6 +47,7 @@ class CategoriesScreen extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Pick a "SCRUM"ptious Category'),
       ),
+      drawer: const MainDrawer(),
       body: GridView(
         padding: const EdgeInsets.all(8),
         gridDelegate: grid,

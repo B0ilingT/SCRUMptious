@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/models/category.dart';
 
 class CategoryGridItem extends StatelessWidget {
