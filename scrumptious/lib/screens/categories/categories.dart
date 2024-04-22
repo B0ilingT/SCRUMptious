@@ -29,7 +29,7 @@ class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerPr
 
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 300),
     );
 
     _animationController.forward();
@@ -81,12 +81,15 @@ class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerPr
               )      
           ],
         ),
-      builder: (context, child) => Padding(
-        padding: EdgeInsets.only(
-          top: 100 - _animationController.value * 100
+      builder: (context, child) => SlideTransition(
+        position: Tween(
+          begin: const Offset(0, 0.3),
+          end: const Offset(0, 0.009)
+        ).animate(
+          CurvedAnimation(parent: _animationController, curve: Curves.easeOutBack)
         ),
-        child: child
-      )  
+        child: child,
+      )
     );
   }
 }
