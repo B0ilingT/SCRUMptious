@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scrumptious/providers/favourites_provider.dart';
 
-class MealDetailsScreen extends StatelessWidget{
+class MealDetailsScreen extends ConsumerWidget{
   const MealDetailsScreen(
     {
       super.key,
       required this.mdlMeal,
-      required this.onToggleFavourite,
     }
   );
 
   final Meal mdlMeal;
-  final void Function(Meal mdlMeal) onToggleFavourite;
 
   String _getStepText(String strStep) {
     int intStepNumber = mdlMeal.arrSteps.indexOf(strStep) + 1;
@@ -19,14 +19,24 @@ class MealDetailsScreen extends StatelessWidget{
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(mdlMeal.strTitle),
         actions: [
           IconButton(
             onPressed: () {
-              onToggleFavourite(mdlMeal);
+              final bWasAdded = ref.read(
+                favouriteMealsProvider.notifier
+              ).toggleMealFavouriteStatus(mdlMeal);
+              ScaffoldMessenger.of(context).clearSnackBars();
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    bWasAdded ? "Added meal to favourites!" : "Meal is no longer a favourite!"
+                  ),
+                )
+              );
             }, 
             icon: const Icon(Icons.star)
           )

@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:scrumptious/providers/filters_provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum Filter {
-  glutenFree,
-  lactoseFree,
-  vegetarian,
-  vegan
-}
-
-class FiltersScreen extends StatefulWidget {
+class FiltersScreen extends ConsumerStatefulWidget {
   const FiltersScreen({super.key});
 
   @override
-  State<FiltersScreen> createState() {
+  ConsumerState<FiltersScreen> createState() {
     return _FiltersScreenState();
   }
 }
 
-class _FiltersScreenState extends State<FiltersScreen> {
+class _FiltersScreenState extends ConsumerState<FiltersScreen> {
   var _bGlutenFreeFilterSet = false;
   var _bLactoseFreeFilterSet = false;
   var _bVegetarianFilterSet = false;
   var _bVeganFilterSet = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final activeFilters = ref.read(filtersProvider);
+    _bGlutenFreeFilterSet = activeFilters[Filter.glutenFree]!;
+    _bLactoseFreeFilterSet = activeFilters[Filter.lactoseFree]!;
+    _bVegetarianFilterSet = activeFilters[Filter.vegetarian]!;
+    _bVeganFilterSet = activeFilters[Filter.vegan]!;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +37,13 @@ class _FiltersScreenState extends State<FiltersScreen> {
         canPop: false,
         onPopInvoked: (bool didPop) {
           if(didPop) return;
-          Navigator.of(context).pop({
+          ref.read(filtersProvider.notifier).setFilters({
             Filter.glutenFree: _bGlutenFreeFilterSet,
             Filter.lactoseFree: _bLactoseFreeFilterSet,
             Filter.vegetarian: _bVegetarianFilterSet,
             Filter.vegan: _bVeganFilterSet,
           });
+          Navigator.of(context).pop();
         },
         child: Column(
           children: [
