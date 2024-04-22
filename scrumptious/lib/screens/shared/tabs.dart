@@ -4,7 +4,6 @@ import 'package:scrumptious/screens/categories/categories.dart';
 import 'package:scrumptious/screens/categories/filters.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:scrumptious/providers/meals_provider.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:scrumptious/data/globals.dart' as globals;
@@ -49,23 +48,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
   
   @override
   Widget build(BuildContext context) {
-    final arrMeals = ref.watch(mealsProvider);
-    final activeFilters = ref.watch(filtersProvider);
-    final availableMeals = arrMeals.where((meal) {
-      if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {
-        return false;
-      }
-      if (activeFilters[Filter.lactoseFree]! && !meal.bIsLactoseFree) {
-        return false;
-      }
-      if (activeFilters[Filter.vegetarian]! && !meal.bIsVegetarian) {
-        return false;
-      }
-      if (activeFilters[Filter.vegan]! && !meal.bIsVegan) {
-        return false;
-      }
-      return true;
-    }).toList();
+    final availableMeals = ref.watch(filteredMealsProvider);
 
     Widget activePage = CategoriesScreen(
       onSetScreen: _setScreen,
