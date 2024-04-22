@@ -6,6 +6,7 @@ import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
+import 'package:scrumptious/widgets/main_drawer.dart';
 import 'package:scrumptious/data/globals.dart' as globals;
 
 class TabsScreen extends ConsumerStatefulWidget {
@@ -21,7 +22,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
   Category favourites = const Category(
     strId: 'c0', 
-    strTitle: 'Favorites', 
+    strTitle: 'Favourites', 
     colour: Color.fromARGB(255, 255, 187, 0)
   );
 
@@ -51,7 +52,6 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     final availableMeals = ref.watch(filteredMealsProvider);
 
     Widget activePage = CategoriesScreen(
-      onSetScreen: _setScreen,
       availableMeals: availableMeals,
     );
 
@@ -61,9 +61,31 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
         arrMeals: arrFavouriteMeals, 
         mdlCategory: favourites, 
       );
+
+      return Scaffold(
+        body: activePage,
+        bottomNavigationBar: BottomNavigationBar(
+          onTap: _selectPage,
+          currentIndex: _intSelectedPageIndex,
+          items: const [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.set_meal),
+              label: 'Categories',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.star),
+              label: 'Favourites',
+            ),
+          ],
+        ),
+      );
     }
 
     return Scaffold(
+      appBar: AppBar(
+          title: const Text('Pick a "SCRUM"ptious Category'),
+        ),
+      drawer: MainDrawer(onTapDrawerTile: _setScreen),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(
         onTap: _selectPage,

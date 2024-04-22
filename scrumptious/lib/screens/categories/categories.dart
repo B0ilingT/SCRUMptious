@@ -4,22 +4,45 @@ import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:scrumptious/widgets/categories/category_grid_item.dart';
-import 'package:scrumptious/widgets/main_drawer.dart';
 
 
-class CategoriesScreen extends StatelessWidget {
+
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen(
     {
       super.key,
-      required this.onSetScreen,
       required this.availableMeals
     }
   );
   final List<Meal> availableMeals;
-  final void Function(String strIdentifier) onSetScreen;
+
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 150),
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
 
   void _selectCategory(BuildContext context, Category mdlCategory) {
-    final arrFilteredMeals = availableMeals.where(
+    final arrFilteredMeals = widget.availableMeals.where(
       (objMeal) => objMeal.arrCategories.contains(mdlCategory.strId)
     ).toList();
 
@@ -43,24 +66,27 @@ class CategoriesScreen extends StatelessWidget {
       mainAxisSpacing:  20,
     );
 
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Pick a "SCRUM"ptious Category'),
-      ),
-      drawer: MainDrawer(onTapDrawerTile: onSetScreen),
-      body: GridView(
-        padding: const EdgeInsets.all(8),
-        gridDelegate: grid,
-        children: [
-          for (final mdlCategory in availableCategories) 
-            CategoryGridItem(
-              mdlCategory: mdlCategory, 
-              onSelectCategory: () {
-                _selectCategory(context, mdlCategory);
-              }
-            )      
-        ],
-      )
+    return AnimatedBuilder(
+      animation: _animationController, 
+      child: GridView(
+          padding: const EdgeInsets.all(8),
+          gridDelegate: grid,
+          children: [
+            for (final mdlCategory in availableCategories) 
+              CategoryGridItem(
+                mdlCategory: mdlCategory, 
+                onSelectCategory: () {
+                  _selectCategory(context, mdlCategory);
+                }
+              )      
+          ],
+        ),
+      builder: (context, child) => Padding(
+        padding: EdgeInsets.only(
+          top: 100 - _animationController.value * 100
+        ),
+        child: child
+      )  
     );
   }
 }
