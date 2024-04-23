@@ -20,12 +20,18 @@ class FiltersScreen extends ConsumerWidget {
             onChanged: (bIsChecked) {
               ref.read(filtersProvider.notifier).setFilter(Filter.glutenFree, bIsChecked);
             },
-            title: Text('Gluten-free',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
-            subtitle: Text('Only include gluten-free meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
+            title: Text(
+              'Gluten-free',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
+            subtitle: Text(
+              'Only include gluten-free meals.',
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
             activeColor: Theme.of(context).colorScheme.tertiary,
             contentPadding: const EdgeInsets.only(left: 34, right: 22),
           ),
@@ -34,12 +40,18 @@ class FiltersScreen extends ConsumerWidget {
             onChanged: (bIsChecked) {
               ref.read(filtersProvider.notifier).setFilter(Filter.lactoseFree, bIsChecked);
             },
-            title: Text('Lactose-free',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
-            subtitle: Text('Only include lactose-free meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
+            title: Text(
+              'Lactose-free',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
+            subtitle: Text(
+              'Only include lactose-free meals.',
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                    color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
             activeColor: Theme.of(context).colorScheme.tertiary,
             contentPadding: const EdgeInsets.only(left: 34, right: 22),
           ),
@@ -48,12 +60,18 @@ class FiltersScreen extends ConsumerWidget {
             onChanged: (bIsChecked) {
               ref.read(filtersProvider.notifier).setFilter(Filter.vegetarian, bIsChecked);
             },
-            title: Text('Vegetarian',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
-            subtitle: Text('Only include vegetarian friendly meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
+            title: Text(
+              'Vegetarian',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
+            subtitle: Text(
+              'Only include vegetarian friendly meals.',
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
             activeColor: Theme.of(context).colorScheme.tertiary,
             contentPadding: const EdgeInsets.only(left: 34, right: 22),
           ),
@@ -62,12 +80,18 @@ class FiltersScreen extends ConsumerWidget {
             onChanged: (bIsChecked) {
               ref.read(filtersProvider.notifier).setFilter(Filter.vegan, bIsChecked);
             },
-            title: Text('Vegan',
-                style: Theme.of(context).textTheme.titleLarge!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
-            subtitle: Text('Only include vegan friendly meals.',
-                style: Theme.of(context).textTheme.labelMedium!.copyWith(
-                    color: Theme.of(context).colorScheme.onBackground)),
+            title: Text(
+              'Vegan',
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
+            subtitle: Text(
+              'Only include vegan friendly meals.',
+              style: Theme.of(context).textTheme.labelMedium!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground
+              )
+            ),
             activeColor: Theme.of(context).colorScheme.tertiary,
             contentPadding: const EdgeInsets.only(left: 34, right: 22),
           ),
