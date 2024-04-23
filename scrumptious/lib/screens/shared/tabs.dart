@@ -83,8 +83,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-          title: const Text('Pick a "SCRUM"ptious Category'),
-        ),
+          title: const Text('Pick a "SCRUM"ptious Category'),      
+      ),
       drawer: MainDrawer(onTapDrawerTile: _setScreen),
       body: activePage,
       bottomNavigationBar: BottomNavigationBar(

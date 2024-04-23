@@ -40,4 +40,40 @@ class Meal {
   final bool bIsLactoseFree;
   final bool bIsVegan;
   final bool bIsVegetarian;
+
+  factory Meal.fromJson(Map<String, dynamic> json) {
+    return Meal(
+      strId: json['strId'],
+      arrCategories: json['arrCategories'],
+      strTitle: json['strTitle'],
+      strImageUrl: json['strImageUrl'],
+      arrIngredients: json['arrIngredients'],
+      arrSteps: json['arrSteps'],
+      intDuration: json['intDuration'],
+      enumComplexity: json['enumComplexity'],
+      enumAffordability: json['enumAffordability'],
+      bIsGlutenFree: json['bIsGlutenFree'],
+      bIsLactoseFree: json['bIsLactoseFree'],
+      bIsVegan: json['bIsVegan'],
+      bIsVegetarian: json['bIsVegetarian'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'strId': strId,
+      'arrCategories': arrCategories,
+      'strTitle': strTitle,
+      'strImageUrl': strImageUrl,
+      'arrIngredients': arrIngredients,
+      'arrSteps': arrSteps,
+      'intDuration': intDuration,
+      'enumComplexity': enumComplexity,
+      'enumAffordability': enumAffordability,
+      'bIsGlutenFree': bIsGlutenFree,
+      'bIsLactoseFree': bIsLactoseFree,
+      'bIsVegan': bIsVegan,
+      'bIsVegetarian': bIsVegetarian
+    };
+  }
 }
