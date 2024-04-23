@@ -42,18 +42,30 @@ class MealDetailsScreen extends ConsumerWidget{
                 )
               );
             }, 
-            icon: Icon(bIsFavourite ? Icons.star : Icons.star_border)
+            icon: AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              transitionBuilder: (child, animation) {
+                return ScaleTransition(
+                  scale: animation, 
+                  child: child
+                );
+              },
+              child: Icon(bIsFavourite ? Icons.star : Icons.star_border, key: ValueKey(bIsFavourite)),
+            )
           )
         ],
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Image.network(
-              mdlMeal.strImageUrl,
-              height: 300,
-              width: double.infinity,
-              fit: BoxFit.cover,
+            Hero(
+              tag: mdlMeal.strId,
+              child: Image.network(
+                mdlMeal.strImageUrl,
+                height: 300,
+                width: double.infinity,
+                fit: BoxFit.cover,
+              ),
             ),
             const SizedBox(height: 14),
             Text(

@@ -69,7 +69,18 @@ class MealsScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(strTitle),
+        title: Hero(
+          tag: mdlCategory.strId,
+          child: Material(
+            type: MaterialType.transparency,
+            child: Text(
+              strTitle,
+              style: Theme.of(context).textTheme.titleLarge!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+              ),
+            ),
+          ),
+        ),
       ),
       body: content
     );
