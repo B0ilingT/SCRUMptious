@@ -67,7 +67,8 @@ const dummyMeals = [
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
+        'assets/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
+        //'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
     intDuration: 20,
     arrIngredients: [
       '4 Tomatoes',
@@ -100,7 +101,7 @@ const dummyMeals = [
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2018/07/11/21/51/toast-3532016_1280.jpg',
+        'assets/toast-3532016_1280.jpg',
     intDuration: 10,
     arrIngredients: [
       '1 Slice White Bread',
@@ -129,7 +130,7 @@ const dummyMeals = [
     enumAffordability: Affordability.pricey,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2014/10/23/18/05/burger-500054_1280.jpg',
+        'assets/burger-500054_1280.jpg',
     intDuration: 45,
     arrIngredients: [
       '300g Cattle Hack',
@@ -160,7 +161,7 @@ const dummyMeals = [
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.challenging,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2018/03/31/19/29/schnitzel-3279045_1280.jpg',
+        'assets/schnitzel-3279045_1280.jpg',
     intDuration: 60,
     arrIngredients: [
       '8 Veal Cutlets',
@@ -197,7 +198,7 @@ const dummyMeals = [
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2016/10/25/13/29/smoked-salmon-salad-1768890_1280.jpg',
+        'assets/smoked-salmon-salad-1768890_1280.jpg',
     intDuration: 15,
     arrIngredients: [
       'Arugula',
@@ -232,7 +233,7 @@ const dummyMeals = [
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.hard,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2017/05/01/05/18/pastry-2274750_1280.jpg',
+        'assets/pastry-2274750_1280.jpg',
     intDuration: 240,
     arrIngredients: [
       '4 Sheets of Gelatine',
@@ -267,7 +268,7 @@ const dummyMeals = [
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2018/07/10/21/23/pancake-3529653_1280.jpg',
+        'assets/pancake-3529653_1280.jpg',
     intDuration: 20,
     arrIngredients: [
       '1 1/2 Cups all-purpose Flour',
@@ -298,7 +299,7 @@ const dummyMeals = [
     enumAffordability: Affordability.pricey,
     enumComplexity: Complexity.challenging,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2018/06/18/16/05/indian-food-3482749_1280.jpg',
+        'assets/indian-food-3482749_1280.jpg',
     intDuration: 35,
     arrIngredients: [
       '4 Chicken Breasts',
@@ -331,7 +332,7 @@ const dummyMeals = [
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.hard,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2014/08/07/21/07/souffle-412785_1280.jpg',
+        'assets/souffle-412785_1280.jpg',
     intDuration: 45,
     arrIngredients: [
       '1 Teaspoon melted Butter',
@@ -382,7 +383,7 @@ const dummyMeals = [
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.simple,
     strImageUrl:
-        'https://cdn.pixabay.com/photo/2018/04/09/18/26/asparagus-3304997_1280.jpg',
+        'assets/asparagus-3304997_1280.jpg',
     intDuration: 30,
     arrIngredients: [
       'White and Green Asparagus',

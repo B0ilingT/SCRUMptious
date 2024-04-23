@@ -60,7 +60,7 @@ class MealDetailsScreen extends ConsumerWidget{
           children: [
             Hero(
               tag: mdlMeal.strId,
-              child: Image.network(
+              child: Image.asset(
                 mdlMeal.strImageUrl,
                 height: 300,
                 width: double.infinity,
