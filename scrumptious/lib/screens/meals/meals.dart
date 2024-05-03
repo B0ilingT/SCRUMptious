@@ -1,10 +1,14 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
+import 'package:scrumptious/screens/meals/new_meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
-class MealsScreen extends StatelessWidget {
+class MealsScreen extends StatefulWidget {
   const MealsScreen(
     {
       super.key,
@@ -15,6 +19,58 @@ class MealsScreen extends StatelessWidget {
 
   final Category mdlCategory;
   final List<Meal> arrMeals;
+
+  @override
+  State<MealsScreen> createState() => _MealsScreenState();
+}
+
+
+
+class _MealsScreenState extends State<MealsScreen> {
+  final List<Meal> _arrMeals = [];
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
+    @override
+  void initState() {
+    super.initState();
+    _loadMeals();
+  }
+
+  Future<void> _loadMeals() async {
+    final String? mealDataString = await _storage.read(key: 'meals');
+    if (mealDataString != null) {
+      final List<Map<String, dynamic>> mealData = jsonDecode(mealDataString).cast<Map<String, dynamic>>();
+      setState(() {
+        _arrMeals.clear();
+        _arrMeals.addAll(
+          mealData.map((data) => Meal.fromJson(data)),
+        );
+      });
+    }
+  }
+
+  Future<void> _savemeals() async {
+    final List<Map<String, dynamic>> mealData = _arrMeals.map((meal) => meal.toJson()).toList();
+    final String mealDataString = jsonEncode(mealData);
+    await _storage.write(key: 'meals', value: mealDataString);
+    await _storage.write(key: 'mealCount', value: _arrMeals.length.toString());
+  }
+
+  void _openAddMealOverlay() {
+    showModalBottomSheet(
+      useSafeArea: true,
+      context: context,
+      builder: (ctx) => NewMeal(onAddMeal: _addMeal),
+      isScrollControlled: true,
+    );
+  }
+
+  void _addMeal(Meal mdlMeal) {
+    setState(() {
+      _arrMeals.add(mdlMeal);
+    });
+    _savemeals();
+  }
 
   void selectMeal(BuildContext context, Meal mdlMeal){
     Navigator.of(context).push(
@@ -29,9 +85,9 @@ class MealsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Widget content;
-    final String strTitle = mdlCategory.strTitle;
+    final String strTitle = widget.mdlCategory.strTitle;
 
-    if (arrMeals.isEmpty) {
+    if (widget.arrMeals.isEmpty) {
       content = Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -54,11 +110,11 @@ class MealsScreen extends StatelessWidget {
       );
     } else {
       content = ListView.builder(
-        itemCount: arrMeals.length,
+        itemCount: widget.arrMeals.length,
         itemBuilder: (
           (context, index) => MealItem(
-            mdlMeal: arrMeals[index], 
-            mdlCategory: mdlCategory, 
+            mdlMeal: widget.arrMeals[index], 
+            mdlCategory: widget.mdlCategory, 
             onSelectMeal: (mdlMeal){
               selectMeal(context, mdlMeal);
             },
@@ -70,7 +126,7 @@ class MealsScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Hero(
-          tag: mdlCategory.strId,
+          tag: widget.mdlCategory.strId,
           child: Material(
             type: MaterialType.transparency,
             child: Text(
@@ -81,6 +137,12 @@ class MealsScreen extends StatelessWidget {
             ),
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _openAddMealOverlay,
+          )
+        ],
       ),
       body: content
     );
