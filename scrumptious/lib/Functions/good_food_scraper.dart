@@ -4,7 +4,8 @@ import 'package:html/dom.dart' as htmldom;
 import 'dart:convert';
 import 'package:scrumptious/models/meal.dart';
 
-Future<List<Meal>> scrapeBBCGoodFood(String searchTerm) async {
+Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
+    [List<String> arrFilters = const []]) async {
   final initialUrl = 'https://www.bbcgoodfood.com/search?q=$searchTerm';
   final List<Meal> meals = [];
 
@@ -113,8 +114,11 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm) async {
                 } else {
                   continue;
                 }
+                if (meals.length > 10) {
+                  break;
+                }
                 meals.add(Meal(
-                  arrCategories: [],
+                  arrCategories: ['c-1'],
                   strId: meal['id'],
                   strTitle: meal['title'],
                   strImageUrl: meal['image']['url'],
