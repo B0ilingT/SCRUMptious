@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:scrumptious/Functions/good_food_scraper.dart';
+import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:uuid/uuid.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -21,6 +22,12 @@ class _NewMealState extends State<NewMeal> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   Future<void>? _searchFuture;
   final _titleController = TextEditingController();
+  var activeFilters = {
+    Filter.glutenFree: false,
+    Filter.lactoseFree: false,
+    Filter.vegetarian: false,
+    Filter.vegan: false
+  };
 
   Category searchResults = const Category(
       strId: 'c-1',
@@ -28,13 +35,39 @@ class _NewMealState extends State<NewMeal> {
       colour: Color.fromARGB(255, 140, 0, 255));
 
   Future _submitMealData() async {
-    final arrFilteredMeals = await scrapeBBCGoodFood(_titleController.text);
+    final arrMeals = await scrapeBBCGoodFood(_titleController.text);
 
-    Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => MealsScreen(
-              mdlCategory: searchResults,
-              arrMeals: arrFilteredMeals,
-            )));
+    if (mounted) {
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (ctx) => MealsScreen(
+                mdlCategory: searchResults,
+                arrMeals: filterMeals(arrMeals),
+              )));
+    }
+  }
+
+  List<Meal> filterMeals(List<Meal> arrMeals) {
+    return arrMeals.where((meal) {
+      if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {
+        return false;
+      }
+      if (activeFilters[Filter.lactoseFree]! && !meal.bIsLactoseFree) {
+        return false;
+      }
+      if (activeFilters[Filter.vegetarian]! && !meal.bIsVegetarian) {
+        return false;
+      }
+      if (activeFilters[Filter.vegan]! && !meal.bIsVegan) {
+        return false;
+      }
+      return true;
+    }).toList();
+  }
+
+  void updateFilter(Filter filterType, bool newValue) {
+    setState(() {
+      activeFilters[filterType] = newValue;
+    });
   }
 
   @override
@@ -46,7 +79,6 @@ class _NewMealState extends State<NewMeal> {
   @override
   Widget build(BuildContext context) {
     final keyboardSpace = MediaQuery.of(context).viewInsets.bottom;
-    final activeFilters = ref.watch(filtersProvider);
     final width = MediaQuery.of(context).size.width;
 
     return SafeArea(
@@ -124,9 +156,7 @@ class _NewMealState extends State<NewMeal> {
                     SwitchListTile(
                       value: activeFilters[Filter.glutenFree]!,
                       onChanged: (bIsChecked) {
-                        ref
-                            .read(filtersProvider.notifier)
-                            .setFilter(Filter.glutenFree, bIsChecked);
+                        updateFilter(Filter.glutenFree, bIsChecked);
                       },
                       title: Text('Gluten-free',
                           style: Theme.of(context)
@@ -151,9 +181,7 @@ class _NewMealState extends State<NewMeal> {
                     SwitchListTile(
                       value: activeFilters[Filter.lactoseFree]!,
                       onChanged: (bIsChecked) {
-                        ref
-                            .read(filtersProvider.notifier)
-                            .setFilter(Filter.lactoseFree, bIsChecked);
+                        updateFilter(Filter.lactoseFree, bIsChecked);
                       },
                       title: Text('Lactose-free',
                           style: Theme.of(context)
@@ -178,9 +206,7 @@ class _NewMealState extends State<NewMeal> {
                     SwitchListTile(
                       value: activeFilters[Filter.vegetarian]!,
                       onChanged: (bIsChecked) {
-                        ref
-                            .read(filtersProvider.notifier)
-                            .setFilter(Filter.vegetarian, bIsChecked);
+                        updateFilter(Filter.vegetarian, bIsChecked);
                       },
                       title: Text('Vegetarian',
                           style: Theme.of(context)
@@ -205,9 +231,7 @@ class _NewMealState extends State<NewMeal> {
                     SwitchListTile(
                       value: activeFilters[Filter.vegan]!,
                       onChanged: (bIsChecked) {
-                        ref
-                            .read(filtersProvider.notifier)
-                            .setFilter(Filter.vegan, bIsChecked);
+                        updateFilter(Filter.vegan, bIsChecked);
                       },
                       title: Text('Vegan',
                           style: Theme.of(context)

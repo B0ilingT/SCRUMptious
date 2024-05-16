@@ -4,6 +4,8 @@ import 'package:html/dom.dart' as htmldom;
 import 'dart:convert';
 import 'package:scrumptious/models/meal.dart';
 
+String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+
 Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
     [List<String> arrFilters = const []]) async {
   final initialUrl = 'https://www.bbcgoodfood.com/search?q=$searchTerm';
@@ -85,7 +87,13 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                         stepElement.querySelector('.editor-content')?.text ??
                             '';
                     final step = '$stepNumber: $stepContent';
-                    arrSteps.add(step);
+                    // Remove "STEP X:" from the step
+                    final cleanedStep =
+                        step.replaceFirst(RegExp(r'STEP \d+: '), '');
+                    final steps = cleanedStep
+                        .split('.')
+                        .where((s) => s.trim().isNotEmpty);
+                    arrSteps.addAll(steps);
                   }
                 } else {
                   continue;
@@ -100,16 +108,23 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                   for (final ingredientElement in ingredientElements) {
                     final ingredientAnchor =
                         ingredientElement.querySelector('a');
+                    String ingredient;
 
                     if (ingredientAnchor != null) {
                       // If <a> tag exists, extract its text content
-                      final ingredient = ingredientAnchor.text.trim();
-                      arrIngredients.add(ingredient);
+                      ingredient = ingredientAnchor.text.trim();
                     } else {
                       // Otherwise, extract text content of the <li> element
-                      final ingredient = ingredientElement.text.trim();
-                      arrIngredients.add(ingredient);
+                      ingredient = ingredientElement.text.trim();
                     }
+
+                    // Remove trailing commas
+                    ingredient = ingredient.replaceAll(RegExp(r',\s*$'), '');
+                    ingredient = ingredient.replaceAll(',', ' -');
+                    // Capitalize the first letter of the ingredient
+                    ingredient = capitalize(ingredient);
+
+                    arrIngredients.add(ingredient);
                   }
                 } else {
                   continue;
