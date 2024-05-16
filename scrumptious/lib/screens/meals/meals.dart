@@ -87,7 +87,7 @@ class _MealsScreenState extends State<MealsScreen> {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text("looool... there's no meals here!",
+            Text("No meals found!",
                 style: Theme.of(context).textTheme.headlineLarge!.copyWith(
                     color: Theme.of(context).colorScheme.onBackground)),
             const SizedBox(height: 16),
@@ -124,10 +124,12 @@ class _MealsScreenState extends State<MealsScreen> {
             ),
           ),
           actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: _openSearchOverlay,
-            )
+            if (widget.mdlCategory.strId != 'c0' ||
+                widget.mdlCategory.strId != 'c-1')
+              IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: _openSearchOverlay,
+              ),
           ],
         ),
         body: content);
