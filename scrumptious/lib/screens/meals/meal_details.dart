@@ -4,12 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 
 class MealDetailsScreen extends ConsumerWidget {
-  const MealDetailsScreen({
-    super.key,
-    required this.mdlMeal,
-  });
+  const MealDetailsScreen(
+      {super.key, required this.mdlMeal, required this.addMeal});
 
   final Meal mdlMeal;
+  final void Function(Meal) addMeal;
 
   String _getStepText(String strStep) {
     int intStepNumber = mdlMeal.arrSteps.indexOf(strStep) + 1;
@@ -26,26 +25,49 @@ class MealDetailsScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(mdlMeal.strTitle),
         actions: [
-          IconButton(
-              onPressed: () {
-                final bWasAdded = ref
-                    .read(favouriteMealsProvider.notifier)
-                    .toggleMealFavouriteStatus(mdlMeal);
-                ScaffoldMessenger.of(context).clearSnackBars();
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(bWasAdded
-                      ? "Added meal to favourites!"
-                      : "Meal is no longer a favourite!"),
-                ));
-              },
-              icon: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                transitionBuilder: (child, animation) {
-                  return ScaleTransition(scale: animation, child: child);
-                },
-                child: Icon(bIsFavourite ? Icons.star : Icons.star_border,
-                    key: ValueKey(bIsFavourite)),
-              ))
+          mdlMeal.arrCategories.contains('c-1')
+              ? IconButton(
+                  onPressed: () {
+                    addMeal(mdlMeal);
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text("Meal added!"),
+                    ));
+                  },
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: const Icon(
+                      Icons.add,
+                      key: ValueKey(true),
+                    ),
+                  ),
+                )
+              : IconButton(
+                  onPressed: () {
+                    final bWasAdded = ref
+                        .read(favouriteMealsProvider.notifier)
+                        .toggleMealFavouriteStatus(mdlMeal);
+                    ScaffoldMessenger.of(context).clearSnackBars();
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(bWasAdded
+                          ? "Added meal to favourites!"
+                          : "Meal is no longer a favourite!"),
+                    ));
+                  },
+                  icon: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    transitionBuilder: (child, animation) {
+                      return ScaleTransition(scale: animation, child: child);
+                    },
+                    child: Icon(
+                      bIsFavourite ? Icons.star : Icons.star_border,
+                      key: ValueKey(bIsFavourite),
+                    ),
+                  ),
+                )
         ],
       ),
       body: SingleChildScrollView(

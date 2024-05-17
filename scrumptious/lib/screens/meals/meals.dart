@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ffi';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -72,9 +73,8 @@ class _MealsScreenState extends State<MealsScreen> {
 
   void selectMeal(BuildContext context, Meal mdlMeal) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) => MealDetailsScreen(
-              mdlMeal: mdlMeal,
-            )));
+        builder: (ctx) =>
+            MealDetailsScreen(mdlMeal: mdlMeal, addMeal: _addMeal)));
   }
 
   @override

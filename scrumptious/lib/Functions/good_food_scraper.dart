@@ -115,7 +115,9 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
 
                     ingredient = ingredient.replaceAll(RegExp(r',\s*$'), '');
                     ingredient = ingredient.replaceAll(',', ' -');
-                    ingredient = capitalize(ingredient);
+                    if (ingredient.isNotEmpty) {
+                      ingredient = capitalize(ingredient);
+                    }
 
                     arrIngredients.add(ingredient);
                   }
@@ -148,8 +150,9 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
     } else {
       //print('Failed to load page: ${response.statusCode}');
     }
-  } catch (e) {
-    print(e.toString());
+  } catch (e, s) {
+    print('Exception: $e');
+    print('Stack Trace: $s');
   }
   return meals;
 }

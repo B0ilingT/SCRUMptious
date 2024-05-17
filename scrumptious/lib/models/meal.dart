@@ -4,10 +4,20 @@ enum Complexity {
   hard,
 }
 
+Complexity stringToComplexity(String str) {
+  return Complexity.values
+      .firstWhere((e) => e.toString() == str, orElse: () => Complexity.simple);
+}
+
 enum Affordability {
   affordable,
   pricey,
   luxurious,
+}
+
+Affordability stringToAffordability(String str) {
+  return Affordability.values.firstWhere((e) => e.toString() == str,
+      orElse: () => Affordability.affordable);
 }
 
 class Meal {
@@ -44,14 +54,18 @@ class Meal {
   factory Meal.fromJson(Map<String, dynamic> json) {
     return Meal(
       strId: json['strId'],
-      arrCategories: json['arrCategories'],
+      arrCategories:
+          json['arrCategories'].map<String>((item) => item.toString()).toList(),
       strTitle: json['strTitle'],
       strImageUrl: json['strImageUrl'],
-      arrIngredients: json['arrIngredients'],
-      arrSteps: json['arrSteps'],
+      arrIngredients: json['arrIngredients']
+          .map<String>((item) => item.toString())
+          .toList(),
+      arrSteps:
+          json['arrSteps'].map<String>((item) => item.toString()).toList(),
       intDuration: json['intDuration'],
-      enumComplexity: json['enumComplexity'],
-      enumAffordability: json['enumAffordability'],
+      enumComplexity: stringToComplexity(json['enumComplexity']),
+      enumAffordability: stringToAffordability(json['enumAffordability']),
       bIsGlutenFree: json['bIsGlutenFree'],
       bIsLactoseFree: json['bIsLactoseFree'],
       bIsVegan: json['bIsVegan'],
@@ -68,8 +82,8 @@ class Meal {
       'arrIngredients': arrIngredients,
       'arrSteps': arrSteps,
       'intDuration': intDuration,
-      'enumComplexity': enumComplexity,
-      'enumAffordability': enumAffordability,
+      'enumComplexity': enumComplexity.toString(),
+      'enumAffordability': enumAffordability.toString(),
       'bIsGlutenFree': bIsGlutenFree,
       'bIsLactoseFree': bIsLactoseFree,
       'bIsVegan': bIsVegan,
