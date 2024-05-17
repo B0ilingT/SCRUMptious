@@ -23,7 +23,7 @@ class _NewMealState extends State<NewMeal> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   Future<void>? _searchFuture;
   final _titleController = TextEditingController();
-  var activeFilters = {
+  Map<Filter, bool> activeFilters = {
     Filter.glutenFree: false,
     Filter.lactoseFree: false,
     Filter.vegetarian: false,
@@ -36,13 +36,14 @@ class _NewMealState extends State<NewMeal> {
       colour: Color.fromARGB(255, 140, 0, 255));
 
   Future _submitMealData() async {
-    final arrMeals = await scrapeBBCGoodFood(_titleController.text);
+    final arrMeals =
+        await scrapeBBCGoodFood(_titleController.text, activeFilters);
 
     if (mounted) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => MealsScreen(
                 mdlCategory: searchResults,
-                arrMeals: filterMeals(arrMeals),
+                arrMeals: arrMeals,
               )));
     }
   }

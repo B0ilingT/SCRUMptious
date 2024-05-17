@@ -3,11 +3,33 @@ import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as htmldom;
 import 'dart:convert';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/providers/filters_provider.dart';
 
-String capitalize(String s) => s[0].toUpperCase() + s.substring(1);
+String capitalize(String s) {
+  if (s.isEmpty) {
+    return s;
+  }
+  return s[0].toUpperCase() + s.substring(1);
+}
+
+final filterMapping = {
+  Filter.vegan: 'vegan',
+  Filter.glutenFree: 'gluten-free',
+  Filter.lactoseFree: 'dairy-free',
+  Filter.vegetarian: 'vegetarian',
+};
 
 Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
-    [List<String> arrFilters = const []]) async {
+    [Map<Filter, bool> arrFilters = const {}]) async {
+  if (arrFilters.isNotEmpty) {
+    final List<String> arrFilterStrings = [];
+    for (final filter in arrFilters.entries) {
+      if (filter.value) {
+        arrFilterStrings.add(filterMapping[filter.key]!);
+      }
+    }
+    searchTerm += '&diet=${arrFilterStrings.join('%2C')}';
+  }
   final initialUrl = 'https://www.bbcgoodfood.com/search?q=$searchTerm';
   final List<Meal> meals = [];
 
@@ -117,9 +139,8 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                     ingredient = ingredient.replaceAll(',', ' -');
                     if (ingredient.isNotEmpty) {
                       ingredient = capitalize(ingredient);
+                      arrIngredients.add(ingredient);
                     }
-
-                    arrIngredients.add(ingredient);
                   }
                 } else {
                   continue;
