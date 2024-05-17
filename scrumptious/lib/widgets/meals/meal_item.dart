@@ -21,6 +21,10 @@ class MealItem extends StatelessWidget {
   }
 
   String get affordabilityText {
+    if (mdlMeal.arrCategories.contains('c-1')) {
+      return '';
+    }
+
     switch (mdlMeal.enumAffordability) {
       case Affordability.affordable:
         return '£';

@@ -124,7 +124,7 @@ class _MealsScreenState extends State<MealsScreen> {
             ),
           ),
           actions: [
-            if (widget.mdlCategory.strId != 'c0' ||
+            if (widget.mdlCategory.strId != 'c0' &&
                 widget.mdlCategory.strId != 'c-1')
               IconButton(
                 icon: const Icon(Icons.search),

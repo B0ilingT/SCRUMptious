@@ -17,14 +17,12 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
     if (response.statusCode == 200) {
       final document = htmlparser.parse(response.body);
 
-      // Find the script tag containing JSON data
       final scriptElement = document.querySelector('#__POST_CONTENT__');
 
       if (scriptElement != null) {
         final jsonString = scriptElement.text;
         final jsonData = json.decode(jsonString);
 
-        // Find and return the "searchResults" section
         if (jsonData.containsKey('searchResults')) {
           Map<String, dynamic> arrSearchResults =
               jsonData['searchResults'] as Map<String, dynamic>;
@@ -87,7 +85,6 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                         stepElement.querySelector('.editor-content')?.text ??
                             '';
                     final step = '$stepNumber: $stepContent';
-                    // Remove "STEP X:" from the step
                     final cleanedStep =
                         step.replaceFirst(RegExp(r'STEP \d+: '), '');
                     final steps = cleanedStep
@@ -111,17 +108,13 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                     String ingredient;
 
                     if (ingredientAnchor != null) {
-                      // If <a> tag exists, extract its text content
                       ingredient = ingredientAnchor.text.trim();
                     } else {
-                      // Otherwise, extract text content of the <li> element
                       ingredient = ingredientElement.text.trim();
                     }
 
-                    // Remove trailing commas
                     ingredient = ingredient.replaceAll(RegExp(r',\s*$'), '');
                     ingredient = ingredient.replaceAll(',', ' -');
-                    // Capitalize the first letter of the ingredient
                     ingredient = capitalize(ingredient);
 
                     arrIngredients.add(ingredient);
@@ -129,7 +122,7 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                 } else {
                   continue;
                 }
-                if (meals.length > 10) {
+                if (meals.length > 30) {
                   break;
                 }
                 meals.add(Meal(
