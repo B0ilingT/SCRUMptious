@@ -31,7 +31,9 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
         arrFilterStrings.add(filterMapping[filter.key]!);
       }
     }
-    searchTerm += '&diet=${arrFilterStrings.join('%2C')}';
+    if (arrFilterStrings.isNotEmpty) {
+      searchTerm += '&diet=${arrFilterStrings.join('%2C')}';
+    }
   }
   final initialUrl = 'https://www.bbcgoodfood.com/search?q=$searchTerm';
   final List<Meal> meals = [];
