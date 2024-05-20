@@ -1,8 +1,5 @@
-import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
@@ -25,34 +22,10 @@ class MealsScreen extends StatefulWidget {
 
 class _MealsScreenState extends State<MealsScreen> {
   final List<Meal> _arrMeals = [];
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
   @override
   void initState() {
     super.initState();
-    _loadMeals();
-  }
-
-  Future<void> _loadMeals() async {
-    final String? mealDataString = await _storage.read(key: 'meals');
-    if (mealDataString != null) {
-      final List<Map<String, dynamic>> mealData =
-          jsonDecode(mealDataString).cast<Map<String, dynamic>>();
-      setState(() {
-        _arrMeals.clear();
-        _arrMeals.addAll(
-          mealData.map((data) => Meal.fromJson(data)),
-        );
-      });
-    }
-  }
-
-  Future<void> _savemeals() async {
-    final List<Map<String, dynamic>> mealData =
-        _arrMeals.map((meal) => meal.toJson()).toList();
-    final String mealDataString = jsonEncode(mealData);
-    await _storage.write(key: 'meals', value: mealDataString);
-    await _storage.write(key: 'mealCount', value: _arrMeals.length.toString());
   }
 
   void _openSearchOverlay() {
@@ -68,7 +41,7 @@ class _MealsScreenState extends State<MealsScreen> {
     setState(() {
       _arrMeals.add(mdlMeal);
     });
-    _savemeals();
+    addMeal(mdlMeal);
   }
 
   void selectMeal(BuildContext context, Meal mdlMeal) {
@@ -99,14 +72,43 @@ class _MealsScreenState extends State<MealsScreen> {
       );
     } else {
       content = ListView.builder(
-          itemCount: widget.arrMeals.length,
-          itemBuilder: ((context, index) => MealItem(
+        itemCount: widget.arrMeals.length,
+        itemBuilder: ((context, index) => GestureDetector(
+              onLongPress: () {
+                // Show options
+                showDialog(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Options'),
+                      content: Text('Show your options here'),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text('Option 1'),
+                          onPressed: () {
+                            // Handle Option 1
+                          },
+                        ),
+                        TextButton(
+                          child: Text('Option 2'),
+                          onPressed: () {
+                            // Handle Option 2
+                          },
+                        ),
+                      ],
+                    );
+                  },
+                );
+              },
+              child: MealItem(
                 mdlMeal: widget.arrMeals[index],
                 mdlCategory: widget.mdlCategory,
                 onSelectMeal: (mdlMeal) {
                   selectMeal(context, mdlMeal);
                 },
-              )));
+              ),
+            )),
+      );
     }
 
     return Scaffold(
