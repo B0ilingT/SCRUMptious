@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/screens/categories/categories.dart';
 import 'package:scrumptious/screens/categories/filters.dart';
+import 'package:scrumptious/screens/meals/all_meals.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
@@ -40,6 +41,8 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
             MaterialPageRoute(builder: (ctx) => const FiltersScreen()));
         break;
       case globals.strMealsTitle:
+        await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (ctx) => const AllMealsScreen()));
         break;
     }
   }
@@ -110,7 +113,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Pick a "SCRUM"ptious Category'),
+        title: const Text('Pick a Category'),
       ),
       drawer: MainDrawer(onTapDrawerTile: _setScreen),
       body: activePage,

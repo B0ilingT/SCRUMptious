@@ -4,6 +4,9 @@ import 'package:html/dom.dart' as htmldom;
 import 'dart:convert';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
+import 'package:logging/logging.dart';
+
+final _logger = Logger('GoodFoodScraper');
 
 String capitalize(String s) {
   if (s.isEmpty) {
@@ -169,11 +172,10 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
         }
       }
     } else {
-      //print('Failed to load page: ${response.statusCode}');
+      _logger.warning('Failed to load page: ${response.statusCode}');
     }
   } catch (e, s) {
-    print('Exception: $e');
-    print('Stack Trace: $s');
+    _logger.severe('Exception: $e', e, s);
   }
   return meals;
 }

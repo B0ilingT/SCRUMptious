@@ -6,6 +6,10 @@ void addMeal(Meal meal) {
   tempMeals.add(meal);
 }
 
+void addMealAtIndex(Meal meal, int index) {
+  tempMeals.insert(index, meal);
+}
+
 void addAllMeals(List<Meal> arrMeals) {
   tempMeals.addAll(arrMeals);
 }
