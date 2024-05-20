@@ -18,7 +18,6 @@ class MealDetailsScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final favouriteMeals = ref.watch(favouriteMealsProvider);
-
     final bIsFavourite = favouriteMeals.contains(mdlMeal);
 
     return Scaffold(

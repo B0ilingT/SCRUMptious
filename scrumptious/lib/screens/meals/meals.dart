@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
 import 'package:scrumptious/screens/meals/new_meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
-class MealsScreen extends StatefulWidget {
+class MealsScreen extends ConsumerStatefulWidget {
   const MealsScreen({
     super.key,
     required this.arrMeals,
@@ -17,10 +21,10 @@ class MealsScreen extends StatefulWidget {
   final List<Meal> arrMeals;
 
   @override
-  State<MealsScreen> createState() => _MealsScreenState();
+  ConsumerState<MealsScreen> createState() => _MealsScreenState();
 }
 
-class _MealsScreenState extends State<MealsScreen> {
+class _MealsScreenState extends ConsumerState<MealsScreen> {
   final List<Meal> _arrMeals = [];
 
   @override
@@ -54,6 +58,7 @@ class _MealsScreenState extends State<MealsScreen> {
   Widget build(BuildContext context) {
     Widget content;
     final String strTitle = widget.mdlCategory.strTitle;
+    final favouriteMeals = ref.watch(favouriteMealsProvider);
 
     if (widget.arrMeals.isEmpty) {
       content = Center(
@@ -73,33 +78,75 @@ class _MealsScreenState extends State<MealsScreen> {
     } else {
       content = ListView.builder(
         itemCount: widget.arrMeals.length,
-        itemBuilder: ((context, index) => GestureDetector(
-              onLongPress: () {
-                // Show options
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: Text('Options'),
-                      content: Text('Show your options here'),
-                      actions: <Widget>[
-                        TextButton(
-                          child: Text('Option 1'),
-                          onPressed: () {
-                            // Handle Option 1
-                          },
-                        ),
-                        TextButton(
-                          child: Text('Option 2'),
-                          onPressed: () {
-                            // Handle Option 2
-                          },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              },
+        itemBuilder: ((context, index) => Slidable(
+              startActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: <Widget>[
+                  IconTheme(
+                    data: const IconThemeData(size: 50),
+                    child: SlidableAction(
+                      icon: favouriteMeals.contains(widget.arrMeals[index])
+                          ? Icons.star
+                          : Icons.star_border,
+                      onPressed: (context) {
+                        final bWasAdded = ref
+                            .read(favouriteMealsProvider.notifier)
+                            .toggleMealFavouriteStatus(widget.arrMeals[index]);
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(bWasAdded
+                              ? "Added meal to favourites!"
+                              : "Meal is no longer a favourite!"),
+                        ));
+                      },
+                      backgroundColor: const Color.fromARGB(255, 255, 187, 0),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
+              endActionPane: ActionPane(
+                motion: const ScrollMotion(),
+                children: <Widget>[
+                  IconTheme(
+                    data: const IconThemeData(size: 50),
+                    child: SlidableAction(
+                      icon: Icons.delete,
+                      onPressed: (context) {
+                        final removedMeal = widget.arrMeals[index];
+                        final removedMealIndex = index;
+                        widget.arrMeals[index].arrCategories
+                            .remove(widget.mdlCategory.strId);
+
+                        setState(() {
+                          widget.arrMeals.removeAt(index);
+                        });
+                        ScaffoldMessenger.of(context).clearSnackBars();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                                "Meal was removed from ${widget.mdlCategory.strTitle}"),
+                            action: SnackBarAction(
+                              label: 'UNDO',
+                              onPressed: () {
+                                // Restore the removed meal when the 'UNDO' action is clicked
+                                setState(() {
+                                  removedMeal.arrCategories
+                                      .add(widget.mdlCategory.strId);
+                                  widget.arrMeals
+                                      .insert(removedMealIndex, removedMeal);
+                                });
+                              },
+                            ),
+                          ),
+                        );
+                      },
+                      backgroundColor: const Color.fromARGB(171, 255, 0, 0),
+                      foregroundColor: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
               child: MealItem(
                 mdlMeal: widget.arrMeals[index],
                 mdlCategory: widget.mdlCategory,

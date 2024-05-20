@@ -4,7 +4,6 @@ import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:scrumptious/screens/shared/tabs.dart';
 import 'package:uuid/uuid.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 
@@ -20,7 +19,6 @@ class NewMeal extends StatefulWidget {
 }
 
 class _NewMealState extends State<NewMeal> {
-  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   Future<void>? _searchFuture;
   final _titleController = TextEditingController();
   Map<Filter, bool> activeFilters = {
