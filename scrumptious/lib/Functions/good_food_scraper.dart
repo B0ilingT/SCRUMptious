@@ -20,19 +20,38 @@ final filterMapping = {
   Filter.glutenFree: 'gluten-free',
   Filter.lactoseFree: 'dairy-free',
   Filter.vegetarian: 'vegetarian',
+  Filter.nutFree: 'nut-free',
+  Filter.highProtein: 'high-protein',
+  Filter.lowCalorie: 'low-calorie',
+  Filter.under30Mins: 'lt-1800',
+  Filter.under1Hour: 'lt-3600',
 };
 
 Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
     [Map<Filter, bool> arrFilters = const {}]) async {
   if (arrFilters.isNotEmpty) {
     final List<String> arrFilterStrings = [];
+    String strDuration = '';
     for (final filter in arrFilters.entries) {
+      if (filter.key == Filter.under1Hour &&
+          filter.value &&
+          strDuration == '') {
+        strDuration = "&totalTime=${filterMapping[filter.key]}";
+        continue;
+      }
+      if (filter.key == Filter.under30Mins && filter.value) {
+        strDuration = "&totalTime=${filterMapping[filter.key]}";
+        continue;
+      }
       if (filter.value) {
         arrFilterStrings.add(filterMapping[filter.key]!);
       }
     }
     if (arrFilterStrings.isNotEmpty) {
       searchTerm += '&diet=${arrFilterStrings.join('%2C')}';
+    }
+    if (strDuration.isNotEmpty) {
+      searchTerm += strDuration;
     }
   }
   final initialUrl = 'https://www.bbcgoodfood.com/search?q=$searchTerm';

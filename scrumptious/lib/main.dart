@@ -21,6 +21,12 @@ const FlutterSecureStorage storage = FlutterSecureStorage();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  // await storage.deleteAll(); //DEV ONLY
+  // final String mealDataString = jsonEncode(dummyMeals
+  //     .where((meal) => !meal.arrCategories.contains('c-1'))
+  //     .map((meal) => meal.toJson())
+  //     .toList());
+  // await storage.write(key: 'meals', value: mealDataString);
   tempMeals = await _loadMeals();
   runApp(const ProviderScope(child: App()));
 }

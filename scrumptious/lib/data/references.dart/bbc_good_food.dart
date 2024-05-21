@@ -113,3 +113,7 @@ const filters = [
     ]
   }
 ];
+
+// Dietary Requirements: &diet=vegetarian
+// Duration: &totalTime=lt-1800 (Under 30 mins)
+// Difficulty: &difficulty=easy

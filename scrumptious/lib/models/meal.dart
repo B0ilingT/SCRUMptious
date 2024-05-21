@@ -31,11 +31,17 @@ class Meal {
     required this.intDuration,
     required this.enumComplexity,
     required this.enumAffordability,
-    required this.bIsGlutenFree,
-    required this.bIsLactoseFree,
-    required this.bIsVegan,
-    required this.bIsVegetarian,
-  });
+    this.bIsGlutenFree = false,
+    this.bIsLactoseFree = false,
+    this.bIsVegan = false,
+    this.bIsVegetarian = false,
+    this.bIsNutFree = false,
+    this.bIsHighProtein = false,
+    this.bIsLowCalorie = false,
+    bool? bIsUnder30Mins = false,
+    bool? bIsUnder1Hour = false,
+  })  : bIsUnder30Mins = bIsUnder30Mins ?? intDuration < 30,
+        bIsUnder1Hour = bIsUnder1Hour ?? intDuration < 60;
 
   final String strId;
   final List<String> arrCategories;
@@ -50,6 +56,11 @@ class Meal {
   final bool bIsLactoseFree;
   final bool bIsVegan;
   final bool bIsVegetarian;
+  final bool bIsNutFree;
+  final bool bIsHighProtein;
+  final bool bIsLowCalorie;
+  final bool bIsUnder30Mins;
+  final bool bIsUnder1Hour;
 
   factory Meal.fromJson(Map<String, dynamic> json) {
     return Meal(
@@ -70,6 +81,11 @@ class Meal {
       bIsLactoseFree: json['bIsLactoseFree'],
       bIsVegan: json['bIsVegan'],
       bIsVegetarian: json['bIsVegetarian'],
+      bIsNutFree: json['bIsNutFree'],
+      bIsHighProtein: json['bIsHighProtein'],
+      bIsLowCalorie: json['bIsLowCalorie'],
+      bIsUnder30Mins: json['bIsUnder30Mins'],
+      bIsUnder1Hour: json['bIsUnder1Hour'],
     );
   }
 
@@ -87,7 +103,12 @@ class Meal {
       'bIsGlutenFree': bIsGlutenFree,
       'bIsLactoseFree': bIsLactoseFree,
       'bIsVegan': bIsVegan,
-      'bIsVegetarian': bIsVegetarian
+      'bIsVegetarian': bIsVegetarian,
+      'bIsNutFree': bIsNutFree,
+      'bIsHighProtein': bIsHighProtein,
+      'bIsLowCalorie': bIsLowCalorie,
+      'bIsUnder30Mins': bIsUnder30Mins,
+      'bIsUnder1Hour': bIsUnder1Hour
     };
   }
 }
