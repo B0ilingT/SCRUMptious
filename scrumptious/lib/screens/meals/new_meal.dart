@@ -18,7 +18,8 @@ class NewMeal extends StatefulWidget {
   }
 }
 
-class _NewMealState extends State<NewMeal> {
+class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
+  bool showFilters = false;
   Future<void>? _searchFuture;
   final _titleController = TextEditingController();
   Map<Filter, bool> activeFilters = {
@@ -32,6 +33,28 @@ class _NewMealState extends State<NewMeal> {
     Filter.under30Mins: false,
     Filter.under1Hour: false
   };
+
+  late AnimationController _controller;
+  late Animation<Offset> _offsetAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      vsync: this,
+    );
+
+    _offsetAnimation = Tween<Offset>(
+      begin: const Offset(0.0, 1.0),
+      end: Offset.zero,
+    ).animate(CurvedAnimation(
+      parent: _controller,
+      curve:
+          const Cubic(0.68, -0.15, 0.27, 1.2), // Last number is bounce height
+    ));
+  }
 
   Category searchResults = const Category(
       strId: 'c-1',
@@ -93,6 +116,7 @@ class _NewMealState extends State<NewMeal> {
   @override
   void dispose() {
     _titleController.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -180,232 +204,265 @@ class _NewMealState extends State<NewMeal> {
                           },
                         ),
                       ),
+                      const Spacer(),
+                      IconButton(
+                        icon: const Icon(Icons.filter_list),
+                        onPressed: () {
+                          setState(() {
+                            showFilters = !showFilters;
+                          });
+                          if (showFilters) {
+                            _controller.forward();
+                          } else {
+                            _controller.reverse();
+                          }
+                        },
+                      )
                     ]),
-                    SwitchListTile(
-                      value: activeFilters[Filter.glutenFree]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.glutenFree, bIsChecked);
-                      },
-                      title: Text('Gluten-free',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include gluten-free meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.lactoseFree]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.lactoseFree, bIsChecked);
-                      },
-                      title: Text('Lactose-free',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include lactose-free meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.nutFree]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.nutFree, bIsChecked);
-                      },
-                      title: Text('Nut-free',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include nut-free meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.vegetarian]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.vegetarian, bIsChecked);
-                      },
-                      title: Text('Vegetarian',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include vegetarian friendly meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.vegan]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.vegan, bIsChecked);
-                      },
-                      title: Text('Vegan',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include vegan friendly meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.highProtein]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.highProtein, bIsChecked);
-                      },
-                      title: Text('High Protein',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include high protein meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.lowCalorie]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.lowCalorie, bIsChecked);
-                      },
-                      title: Text('Low Calorie',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include low calorie meals.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.under30Mins]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.under30Mins, bIsChecked);
-                      },
-                      title: Text('< 30 mins',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include that take under 30 minutes.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
-                    SwitchListTile(
-                      value: activeFilters[Filter.under1Hour]!,
-                      onChanged: (bIsChecked) {
-                        updateFilter(Filter.under1Hour, bIsChecked);
-                      },
-                      title: Text('< 1 hour',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleLarge!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      subtitle: Text('Only include that take under 1 hour.',
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelMedium!
-                              .copyWith(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onBackground)),
-                      activeColor: Theme.of(context).colorScheme.tertiary,
-                      contentPadding:
-                          const EdgeInsets.only(left: 34, right: 22),
-                    ),
+                    SlideTransition(
+                        position: _offsetAnimation,
+                        child: ClipRect(
+                          child: Column(children: [
+                            SwitchListTile(
+                              value: activeFilters[Filter.glutenFree]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.glutenFree, bIsChecked);
+                              },
+                              title: Text('Gluten-free',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text('Only include gluten-free meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.lactoseFree]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.lactoseFree, bIsChecked);
+                              },
+                              title: Text('Lactose-free',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text('Only include lactose-free meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.nutFree]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.nutFree, bIsChecked);
+                              },
+                              title: Text('Nut-free',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text('Only include nut-free meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.vegetarian]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.vegetarian, bIsChecked);
+                              },
+                              title: Text('Vegetarian',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text(
+                                  'Only include vegetarian friendly meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.vegan]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.vegan, bIsChecked);
+                              },
+                              title: Text('Vegan',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text(
+                                  'Only include vegan friendly meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.highProtein]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.highProtein, bIsChecked);
+                              },
+                              title: Text('High Protein',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text('Only include high protein meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.lowCalorie]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.lowCalorie, bIsChecked);
+                              },
+                              title: Text('Low Calorie',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text('Only include low calorie meals.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.under30Mins]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.under30Mins, bIsChecked);
+                              },
+                              title: Text('< 30 mins',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text(
+                                  'Only include that take under 30 minutes.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                            SwitchListTile(
+                              value: activeFilters[Filter.under1Hour]!,
+                              onChanged: (bIsChecked) {
+                                updateFilter(Filter.under1Hour, bIsChecked);
+                              },
+                              title: Text('< 1 hour',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              subtitle: Text(
+                                  'Only include that take under 1 hour.',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .labelMedium!
+                                      .copyWith(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .onBackground)),
+                              activeColor:
+                                  Theme.of(context).colorScheme.tertiary,
+                              contentPadding:
+                                  const EdgeInsets.only(left: 34, right: 22),
+                            ),
+                          ]),
+                        )),
                   ])),
             ),
           ),
