@@ -27,7 +27,7 @@ final filterMapping = {
   Filter.under1Hour: 'lt-3600',
 };
 
-Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
+Future<List<Meal>> scrapeBBCGoodFood(String searchTerm, int intResults,
     [Map<Filter, bool> arrFilters = const {}]) async {
   if (arrFilters.isNotEmpty) {
     final List<String> arrFilterStrings = [];
@@ -169,7 +169,7 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm,
                 } else {
                   continue;
                 }
-                if (meals.length > 30) {
+                if (meals.length > 15) {
                   break;
                 }
                 meals.add(Meal(

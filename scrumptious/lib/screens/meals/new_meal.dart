@@ -20,6 +20,7 @@ class NewMeal extends StatefulWidget {
 
 class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
   bool showFilters = false;
+  List<Meal> _arrMeals = [];
   Future<void>? _searchFuture;
   final _titleController = TextEditingController();
   Map<Filter, bool> activeFilters = {
@@ -40,7 +41,7 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    _titleController.addListener(_onTitleChanged);
     _controller = AnimationController(
       duration: const Duration(milliseconds: 300),
       vsync: this,
@@ -62,15 +63,24 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
       colour: Color.fromARGB(255, 140, 0, 255));
 
   Future _submitMealData() async {
-    final arrMeals =
-        await scrapeBBCGoodFood(_titleController.text, activeFilters);
+    List<Meal> newMeals =
+        await scrapeBBCGoodFood(_titleController.text, 5, activeFilters);
+    _arrMeals.insertAll(0, newMeals);
 
     if (mounted) {
       Navigator.of(context).push(MaterialPageRoute(
           builder: (ctx) => MealsScreen(
                 mdlCategory: searchResults,
-                arrMeals: arrMeals,
+                arrMeals: _arrMeals,
               )));
+    }
+  }
+
+  void _onTitleChanged() async {
+    if (_titleController.text.length > 3) {
+      List<Meal> newMeals =
+          await scrapeBBCGoodFood(_titleController.text, 2, activeFilters);
+      _arrMeals.addAll(newMeals);
     }
   }
 
@@ -115,8 +125,10 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
 
   @override
   void dispose() {
+    _titleController.removeListener(_onTitleChanged);
     _titleController.dispose();
     _controller.dispose();
+    _arrMeals = [];
     super.dispose();
   }
 
@@ -147,13 +159,26 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
                       style: const TextStyle(
                         color: Colors.white,
                       ),
-                      decoration: const InputDecoration(
-                        label: Text("Search:",
+                      decoration: InputDecoration(
+                        label: const Text("Search:",
                             style: TextStyle(
                               color: Colors.white,
                             )),
-                        helperStyle: TextStyle(
+                        helperStyle: const TextStyle(
                           color: Colors.white,
+                        ),
+                        suffixIcon: Transform.scale(
+                          scale:
+                              0.7, // Adjust this value to make the button smaller or larger
+                          child: IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              setState(() {
+                                _arrMeals.clear();
+                                _titleController.clear();
+                              });
+                            },
+                          ),
                         ),
                       ),
                     ),
