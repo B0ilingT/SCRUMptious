@@ -27,7 +27,8 @@ final filterMapping = {
   Filter.under1Hour: 'lt-3600',
 };
 
-Future<List<Meal>> scrapeBBCGoodFood(String searchTerm, int intResults,
+Future<List<Meal>> scrapeBBCGoodFood(
+    String searchTerm, int intResults, bool bIsRandom,
     [Map<Filter, bool> arrFilters = const {}]) async {
   if (arrFilters.isNotEmpty) {
     final List<String> arrFilterStrings = [];
@@ -74,6 +75,9 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm, int intResults,
               jsonData['searchResults'] as Map<String, dynamic>;
           if (arrSearchResults.containsKey('items')) {
             final List<dynamic> items = arrSearchResults['items'];
+            if (bIsRandom) {
+              items.shuffle();
+            }
             for (final meal in items) {
               final List<String> arrSteps = [];
               final List<String> arrIngredients = [];
@@ -169,7 +173,7 @@ Future<List<Meal>> scrapeBBCGoodFood(String searchTerm, int intResults,
                 } else {
                   continue;
                 }
-                if (meals.length > 15) {
+                if (meals.length > intResults) {
                   break;
                 }
                 meals.add(Meal(

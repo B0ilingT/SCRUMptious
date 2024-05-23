@@ -6,7 +6,7 @@ import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
-import 'package:scrumptious/screens/meals/new_meal.dart';
+import 'package:scrumptious/screens/meals/scrape_meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
 
 class MealsScreen extends ConsumerStatefulWidget {
@@ -35,7 +35,7 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
     showModalBottomSheet(
       useSafeArea: true,
       context: context,
-      builder: (ctx) => const NewMeal(),
+      builder: (ctx) => const ScrapeMeal(),
       isScrollControlled: true,
     );
   }

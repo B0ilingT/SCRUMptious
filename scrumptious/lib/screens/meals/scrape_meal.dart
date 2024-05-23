@@ -9,16 +9,17 @@ import 'package:scrumptious/models/meal.dart';
 
 var uuid = const Uuid();
 
-class NewMeal extends StatefulWidget {
-  const NewMeal({super.key});
+class ScrapeMeal extends StatefulWidget {
+  const ScrapeMeal({super.key});
 
   @override
   State<StatefulWidget> createState() {
-    return _NewMealState();
+    return _ScrapeMealState();
   }
 }
 
-class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
+class _ScrapeMealState extends State<ScrapeMeal>
+    with SingleTickerProviderStateMixin {
   bool showFilters = false;
   List<Meal> _arrMeals = [];
   Future<void>? _searchFuture;
@@ -63,9 +64,15 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
       colour: Color.fromARGB(255, 140, 0, 255));
 
   Future _submitMealData() async {
-    List<Meal> newMeals =
-        await scrapeBBCGoodFood(_titleController.text, 5, activeFilters);
+    List<Meal> newMeals = await scrapeBBCGoodFood(
+        _titleController.text, 15, false, activeFilters);
     _arrMeals.insertAll(0, newMeals);
+
+    _arrMeals = _arrMeals
+        .map((meal) => meal.strTitle)
+        .toSet()
+        .map((title) => _arrMeals.firstWhere((meal) => meal.strTitle == title))
+        .toList();
 
     if (mounted) {
       Navigator.of(context).push(MaterialPageRoute(
@@ -78,8 +85,8 @@ class _NewMealState extends State<NewMeal> with SingleTickerProviderStateMixin {
 
   void _onTitleChanged() async {
     if (_titleController.text.length > 3) {
-      List<Meal> newMeals =
-          await scrapeBBCGoodFood(_titleController.text, 2, activeFilters);
+      List<Meal> newMeals = await scrapeBBCGoodFood(
+          _titleController.text, 5, true, activeFilters);
       _arrMeals.addAll(newMeals);
     }
   }

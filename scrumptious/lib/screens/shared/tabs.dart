@@ -7,7 +7,7 @@ import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
-import 'package:scrumptious/screens/meals/new_meal.dart';
+import 'package:scrumptious/screens/meals/scrape_meal.dart';
 import 'package:scrumptious/widgets/main_drawer.dart';
 import 'package:scrumptious/data/globals.dart' as globals;
 
@@ -56,7 +56,7 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
     );
 
     if (_intSelectedPageIndex == 1) {
-      activePage = const NewMeal();
+      activePage = const ScrapeMeal();
 
       return Scaffold(
         body: activePage,

@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/screens/meals/add_meal.dart';
 import 'package:scrumptious/screens/shared/tabs.dart';
 
 final theme = ThemeData(
@@ -83,6 +84,6 @@ class AppState extends State<App> with WidgetsBindingObserver {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,
-        home: const TabsScreen());
+        home: const AddMealScreen());
   }
 }
