@@ -28,6 +28,10 @@ class _AddMealScreenState extends State<AddMealScreen> {
   List<String> steps = [''];
   File? image;
   PaletteGenerator? paletteGenerator;
+
+  List<TextEditingController> _ingredientControllers = [
+    TextEditingController()
+  ];
   Future pickImage() async {
     try {
       final pickedImage =
@@ -221,19 +225,30 @@ class _AddMealScreenState extends State<AddMealScreen> {
               ],
             ),
             const SizedBox(height: 16.0),
-            Row(
-              children: [
-                const Expanded(
-                  child: TextField(
-                    style: TextStyle(color: Colors.white),
-                    decoration: InputDecoration(
-                      labelText: 'Ingredients:',
-                      labelStyle: TextStyle(color: Colors.white),
-                    ),
-                    maxLines: null,
+            for (var controller in _ingredientControllers)
+              Expanded(
+                child: TextField(
+                  controller: controller,
+                  style: const TextStyle(color: Colors.white),
+                  decoration: InputDecoration(
+                    labelText: _ingredientControllers.indexOf(controller) == 0
+                        ? 'Ingredients'
+                        : '${_ingredientControllers.indexOf(controller)}:',
+                    labelStyle: const TextStyle(color: Colors.white),
                   ),
+                  maxLines: null,
                 ),
-              ],
+              ),
+            IconButton(
+              onPressed: () {
+                setState(() {
+                  _ingredientControllers.add(TextEditingController());
+                });
+              },
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
             ),
             const SizedBox(height: 16.0),
             Row(

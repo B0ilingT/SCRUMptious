@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/screens/categories/categories.dart';
 import 'package:scrumptious/screens/categories/filters.dart';
+import 'package:scrumptious/screens/meals/add_meal.dart';
 import 'package:scrumptious/screens/meals/all_meals.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -43,6 +44,10 @@ class _TabsScreenState extends ConsumerState<TabsScreen> {
       case globals.strMealsTitle:
         await Navigator.of(context)
             .push(MaterialPageRoute(builder: (ctx) => const AllMealsScreen()));
+        break;
+      case globals.strAddMealTitle:
+        await Navigator.of(context)
+            .push(MaterialPageRoute(builder: (ctx) => const AddMealScreen()));
         break;
     }
   }

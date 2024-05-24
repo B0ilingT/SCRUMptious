@@ -34,18 +34,18 @@ class MainDrawer extends StatelessWidget {
             ])),
         ListTile(
           leading: Icon(
-            Icons.restaurant,
+            Icons.add,
             size: 26,
             color: Theme.of(context).colorScheme.onBackground,
           ),
           title: Text(
-            globals.strMealsTitle,
+            globals.strAddMealTitle,
             style: Theme.of(context).textTheme.titleSmall!.copyWith(
                 color: Theme.of(context).colorScheme.onBackground,
                 fontSize: 24),
           ),
           onTap: () {
-            onTapDrawerTile(globals.strMealsTitle);
+            onTapDrawerTile(globals.strAddMealTitle);
           },
         ),
         ListTile(
@@ -62,6 +62,22 @@ class MainDrawer extends StatelessWidget {
           ),
           onTap: () {
             onTapDrawerTile(globals.strFiltersTitle);
+          },
+        ),
+        ListTile(
+          leading: Icon(
+            Icons.restaurant,
+            size: 26,
+            color: Theme.of(context).colorScheme.onBackground,
+          ),
+          title: Text(
+            globals.strMealsTitle,
+            style: Theme.of(context).textTheme.titleSmall!.copyWith(
+                color: Theme.of(context).colorScheme.onBackground,
+                fontSize: 24),
+          ),
+          onTap: () {
+            onTapDrawerTile(globals.strMealsTitle);
           },
         ),
       ],
