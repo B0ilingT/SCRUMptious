@@ -41,7 +41,7 @@ final filtersProvider =
         (ref) => FiltersNotifier());
 
 final filteredMealsProvider = Provider((ref) {
-  final arrMeals = ref.watch(mealsProvider);
+  final arrMeals = ref.watch(mealsProvider(null));
   final activeFilters = ref.watch(filtersProvider);
 
   return arrMeals.where((meal) {

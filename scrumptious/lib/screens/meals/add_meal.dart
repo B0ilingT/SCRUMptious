@@ -4,9 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
 
@@ -26,11 +28,10 @@ String capitalizeFirstLetter(String text) {
 }
 
 class _AddMealScreenState extends State<AddMealScreen> {
-  List<String> ingredients = [''];
-  List<String> steps = [''];
   bool isMinutes = true;
 
   File? image;
+  String? imagePath;
   PaletteGenerator? paletteGenerator;
 
   final List<TextEditingController> _ingredientControllers = [
@@ -39,6 +40,13 @@ class _AddMealScreenState extends State<AddMealScreen> {
   final List<TextEditingController> _stepsControllers = [
     TextEditingController()
   ];
+  final TextEditingController _titleController = TextEditingController();
+  final TextEditingController _durationController = TextEditingController();
+
+  List<String> arrCategories = [];
+  Affordability enumAffordability = Affordability.affordable;
+  Complexity enumComplexity = Complexity.simple;
+  int intDuration = 0;
 
   Map<Filter, bool> activeFilters = {
     Filter.glutenFree: false,
@@ -48,8 +56,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
     Filter.nutFree: false,
     Filter.highProtein: false,
     Filter.lowCalorie: false,
-    Filter.under30Mins: false,
-    Filter.under1Hour: false
   };
 
   void updateFilter(Filter filterType, bool newValue) {
@@ -71,16 +77,17 @@ class _AddMealScreenState extends State<AddMealScreen> {
       if (!await imageDirectory.exists()) {
         await imageDirectory.create(recursive: true);
       }
-      final imagePath =
+      final newImagePath =
           '${imageDirectory.path}/${DateTime.now().toIso8601String()}.png';
 
-      final newImage = await imageTemp.copy(imagePath);
+      final newImage = await imageTemp.copy(newImagePath);
       final newPalette = await PaletteGenerator.fromImageProvider(
         FileImage(newImage),
       );
 
       setState(() {
         image = newImage;
+        imagePath = newImagePath;
         paletteGenerator = newPalette;
       });
     } on PlatformException catch (e) {
@@ -108,6 +115,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
       );
       setState(() {
         image = file;
+        imagePath = file.path;
         paletteGenerator = newPalette;
       });
     }
@@ -123,16 +131,65 @@ class _AddMealScreenState extends State<AddMealScreen> {
     );
   }
 
-  void addIngredient() {
-    setState(() {
-      ingredients.add('');
-    });
+  void _showMultiSelect(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return MultiSelectDialog(
+          title:
+              const Text('Categories:', style: TextStyle(color: Colors.white)),
+          confirmText:
+              const Text('Confirm', style: TextStyle(color: Colors.white)),
+          cancelText:
+              const Text('Cancel', style: TextStyle(color: Colors.white)),
+          itemsTextStyle: const TextStyle(color: Colors.white),
+          selectedItemsTextStyle: const TextStyle(color: Colors.white),
+          items: availableCategories
+              .map((category) =>
+                  MultiSelectItem(category.strId, category.strTitle))
+              .toList(),
+          initialValue: arrCategories,
+          onConfirm: (values) {
+            setState(() {
+              arrCategories = values.cast<String>();
+            });
+          },
+        );
+      },
+    );
   }
 
-  void addStep() {
-    setState(() {
-      ingredients.add('');
-    });
+  void saveMeal() {
+    List<String> arrIngredients = [];
+    List<String> arrSteps = [];
+    for (var controller in _ingredientControllers) {
+      arrIngredients.add(controller.text);
+    }
+    for (var controller in _stepsControllers) {
+      arrSteps.add(controller.text);
+    }
+    final newMeal = Meal(
+      strId: DateTime.now().toIso8601String(),
+      arrCategories: arrCategories,
+      strTitle: _titleController.text,
+      strImageUrl: imagePath ?? '',
+      arrIngredients: arrIngredients,
+      arrSteps: arrSteps,
+      intDuration: intDuration,
+      enumComplexity: enumComplexity,
+      enumAffordability: enumAffordability,
+      bIsGlutenFree: activeFilters[Filter.glutenFree]!,
+      bIsLactoseFree: activeFilters[Filter.lactoseFree]!,
+      bIsVegan: activeFilters[Filter.vegan]!,
+      bIsVegetarian: activeFilters[Filter.vegetarian]!,
+      bIsNutFree: activeFilters[Filter.nutFree]!,
+      bIsHighProtein: activeFilters[Filter.highProtein]!,
+      bIsLowCalorie: activeFilters[Filter.lowCalorie]!,
+      bIsUnder30Mins: intDuration < 30,
+      bIsUnder1Hour: intDuration < 60,
+    );
+    addMeal(newMeal);
+    // Navigator.of(context).pop();
   }
 
   @override
@@ -192,9 +249,11 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   ],
                 ),
               ),
-              const TextField(
-                style: TextStyle(color: Colors.white),
-                decoration: InputDecoration(
+              TextField(
+                controller: _titleController,
+                style: const TextStyle(color: Colors.white),
+                maxLength: 50,
+                decoration: const InputDecoration(
                   labelText: 'Name:',
                   labelStyle: TextStyle(color: Colors.white),
                 ),
@@ -203,56 +262,61 @@ class _AddMealScreenState extends State<AddMealScreen> {
               Row(
                 children: [
                   Expanded(
-                    flex: 3,
-                    child: DropdownButtonFormField<String>(
-                      decoration: const InputDecoration(
-                        labelText: 'Category',
-                        labelStyle: TextStyle(color: Colors.white),
-                      ),
-                      items: availableCategories.map((category) {
-                        return DropdownMenuItem(
-                          value: category.strId,
-                          child: Text(category.strTitle,
-                              style: const TextStyle(color: Colors.white)),
-                        );
-                      }).toList(),
-                      onChanged: (value) {},
-                    ),
-                  ),
+                      flex: 3,
+                      child: Align(
+                        alignment: AlignmentDirectional.bottomCenter,
+                        child: ElevatedButton(
+                          onPressed: () {
+                            _showMultiSelect(context);
+                          },
+                          child: const Text(
+                            'Categories',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                      )),
                   const SizedBox(width: 12.0),
                   Expanded(
                     flex: 2,
-                    child: DropdownButtonFormField<String>(
+                    child: DropdownButtonFormField<Affordability>(
                       decoration: const InputDecoration(
                         labelText: 'Price',
                         labelStyle: TextStyle(color: Colors.white),
                       ),
                       items: Affordability.values.map((affordability) {
                         return DropdownMenuItem(
-                          value: affordability.name,
+                          value: affordability,
                           child: Text(getAffordabilitySign(affordability),
                               style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          enumAffordability = value!;
+                        });
+                      },
                     ),
                   ),
                   const SizedBox(width: 12.0),
                   Expanded(
                     flex: 3,
-                    child: DropdownButtonFormField<String>(
+                    child: DropdownButtonFormField<Complexity>(
                       decoration: const InputDecoration(
                         labelText: 'Difficulty',
                         labelStyle: TextStyle(color: Colors.white),
                       ),
                       items: Complexity.values.map((complexity) {
                         return DropdownMenuItem(
-                          value: complexity.name,
+                          value: complexity,
                           child: Text(capitalizeFirstLetter(complexity.name),
                               style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),
-                      onChanged: (value) {},
+                      onChanged: (value) {
+                        setState(() {
+                          enumComplexity = value!;
+                        });
+                      },
                     ),
                   ),
                 ],
@@ -263,6 +327,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                   Expanded(
                     flex: 3,
                     child: TextField(
+                        controller: _durationController,
                         style: const TextStyle(color: Colors.white),
                         decoration: const InputDecoration(
                           labelText: 'Duration:',
@@ -298,9 +363,16 @@ class _AddMealScreenState extends State<AddMealScreen> {
                         ),
                       ],
                       onChanged: (value) {
-                        setState(() {
-                          isMinutes = value == "Minutes";
-                        });
+                        if (value == "Minutes") {
+                          setState(() {
+                            intDuration = int.parse(_durationController.text);
+                          });
+                        } else {
+                          setState(() {
+                            intDuration =
+                                int.parse(_durationController.text) * 60;
+                          });
+                        }
                       },
                     ),
                   ),
@@ -310,7 +382,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
               const Align(
                   alignment: Alignment.centerLeft,
                   child: Text("Ingredients:",
-                      style: TextStyle(color: Colors.white))),
+                      style: TextStyle(color: Colors.white, fontSize: 18))),
               for (var controller in _ingredientControllers)
                 SizedBox(
                   child: TextField(
@@ -526,9 +598,9 @@ class _AddMealScreenState extends State<AddMealScreen> {
               const SizedBox(height: 16.0),
               ElevatedButton(
                 onPressed: () {
-                  // TODO: Implement button functionality
+                  saveMeal();
                 },
-                child: const Text('Save'),
+                child: const Text('Add'),
               ),
             ],
           ),
