@@ -90,38 +90,52 @@ class _AddMealScreenState extends State<AddMealScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
-            if (image != null)
-              Stack(
+            GestureDetector(
+              onTap: () async {
+                await pickImage();
+              },
+              child: Stack(
                 children: <Widget>[
-                  Image.file(
-                    image!,
-                    fit: BoxFit.cover,
-                    width: double.infinity, // make it cover the entire width
-                    height: MediaQuery.of(context).size.height *
-                        0.3, // adjust the height as needed
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.crop, color: iconColor),
-                      onPressed: _cropImage,
+                  if (image is File)
+                    Image.file(
+                      image!,
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
+                    )
+                  else
+                    Image.asset(
+                      'assets/placeholder.jpg',
+                      fit: BoxFit.cover,
+                      width: double.infinity,
+                      height: MediaQuery.of(context).size.height * 0.3,
                     ),
-                  ),
-                  Positioned(
-                    left: 0,
-                    bottom: 0,
-                    child: IconButton(
-                      icon: Icon(Icons.delete, color: iconColor),
-                      onPressed: () {
-                        setState(() {
-                          image = null;
-                        });
-                      },
+                  if (image is File) ...[
+                    Positioned(
+                      right: 0,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.crop, color: iconColor),
+                        onPressed: _cropImage,
+                      ),
                     ),
-                  ),
+                    Positioned(
+                      left: 00,
+                      bottom: 0,
+                      child: IconButton(
+                        icon: Icon(Icons.delete, color: iconColor),
+                        onPressed: () {
+                          setState(() {
+                            image = null;
+                            paletteGenerator = null;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ],
               ),
+            ),
             const TextField(
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
