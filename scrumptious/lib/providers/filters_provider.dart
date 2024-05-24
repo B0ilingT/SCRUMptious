@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/meals_provider.dart';
 
 enum Filter {
@@ -40,11 +41,10 @@ final filtersProvider =
     StateNotifierProvider<FiltersNotifier, Map<Filter, bool>>(
         (ref) => FiltersNotifier());
 
-final filteredMealsProvider = Provider((ref) {
-  final arrMeals = ref.watch(mealsProvider(null));
+final filteredMealsProvider = Provider<List<Meal>>((ref) {
+  final tempMeals = ref.watch(tempMealProvider);
   final activeFilters = ref.watch(filtersProvider);
-
-  return arrMeals.where((meal) {
+  return tempMeals.where((meal) {
     if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {
       return false;
     }

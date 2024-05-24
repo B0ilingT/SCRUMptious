@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/providers/meals_provider.dart';
 import 'package:scrumptious/screens/shared/tabs.dart';
 
 final theme = ThemeData(
@@ -32,24 +33,24 @@ void main() async {
 }
 
 Future<List<Meal>> _loadMeals() async {
-  final String? mealDataString2 = await storage.read(key: 'meals');
-  if (mealDataString2 != null) {
+  final String? mealDataString = await storage.read(key: 'meals');
+  if (mealDataString != null) {
     final List<Map<String, dynamic>> mealData =
-        jsonDecode(mealDataString2).cast<Map<String, dynamic>>();
+        jsonDecode(mealDataString).cast<Map<String, dynamic>>();
     return mealData.map((data) => Meal.fromJson(data)).toList();
   } else {
     return dummyMeals;
   }
 }
 
-class App extends StatefulWidget {
+class App extends ConsumerStatefulWidget {
   const App({super.key});
 
   @override
   AppState createState() => AppState();
 }
 
-class AppState extends State<App> with WidgetsBindingObserver {
+class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -66,12 +67,13 @@ class AppState extends State<App> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused ||
         state == AppLifecycleState.detached) {
-      _saveMeals();
+      _saveMeals(ref);
     }
   }
 
-  Future<void> _saveMeals() async {
-    final String mealDataString = jsonEncode(tempMeals
+  Future<void> _saveMeals(WidgetRef ref) async {
+    final String mealDataString = jsonEncode(ref
+        .watch(tempMealProvider)
         .where((meal) => !meal.arrCategories.contains('c-1'))
         .map((meal) => meal.toJson())
         .toList());

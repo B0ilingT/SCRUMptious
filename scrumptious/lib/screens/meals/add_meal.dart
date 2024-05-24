@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
@@ -8,16 +9,16 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
+import 'package:scrumptious/providers/meals_provider.dart';
 
 final _logger = Logger('AddMealScreen');
 
-class AddMealScreen extends StatefulWidget {
+class AddMealScreen extends ConsumerStatefulWidget {
   const AddMealScreen({super.key});
   @override
-  State<AddMealScreen> createState() => _AddMealScreenState();
+  ConsumerState<AddMealScreen> createState() => _AddMealScreenState();
 }
 
 String capitalizeFirstLetter(String text) {
@@ -27,7 +28,7 @@ String capitalizeFirstLetter(String text) {
   return text[0].toUpperCase() + text.substring(1);
 }
 
-class _AddMealScreenState extends State<AddMealScreen> {
+class _AddMealScreenState extends ConsumerState<AddMealScreen> {
   bool isMinutes = true;
 
   File? image;
@@ -188,8 +189,8 @@ class _AddMealScreenState extends State<AddMealScreen> {
       bIsUnder30Mins: intDuration < 30,
       bIsUnder1Hour: intDuration < 60,
     );
-    addMeal(newMeal);
-    // Navigator.of(context).pop();
+    ref.read(tempMealProvider.notifier).updateMeals([newMeal]);
+    Navigator.of(context).pop();
   }
 
   @override
@@ -468,7 +469,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Gluten-free',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include gluten-free meals.',
+                    subtitle: Text('This meal is gluten-free.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -487,7 +488,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Lactose-free',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include lactose-free meals.',
+                    subtitle: Text('This meal is lactose-free.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -506,7 +507,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Nut-free',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include nut-free meals.',
+                    subtitle: Text('This meal is nut-free.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -525,7 +526,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Vegetarian',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include vegetarian friendly meals.',
+                    subtitle: Text('This meal is vegetarian friendly.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -544,7 +545,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Vegan',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include vegan friendly meals.',
+                    subtitle: Text('This meal is vegan friendly.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -563,7 +564,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('High Protein',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include high protein meals.',
+                    subtitle: Text('This meal is high in protein.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!
@@ -582,7 +583,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                     title: Text('Low Calorie',
                         style: Theme.of(context).textTheme.titleLarge!.copyWith(
                             color: Theme.of(context).colorScheme.onBackground)),
-                    subtitle: Text('Only include low calorie meals.',
+                    subtitle: Text('This meal is low in calories.',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium!

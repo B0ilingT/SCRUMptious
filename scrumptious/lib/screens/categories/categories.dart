@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
+import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:scrumptious/screens/meals/meals.dart';
 import 'package:scrumptious/widgets/categories/category_grid_item.dart';
 
-class CategoriesScreen extends StatefulWidget {
+class CategoriesScreen extends ConsumerStatefulWidget {
   const CategoriesScreen({super.key, required this.availableMeals});
   final List<Meal> availableMeals;
 
   @override
-  State<CategoriesScreen> createState() => _CategoriesScreenState();
+  ConsumerState<CategoriesScreen> createState() => _CategoriesScreenState();
 }
 
-class _CategoriesScreenState extends State<CategoriesScreen>
+class _CategoriesScreenState extends ConsumerState<CategoriesScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
 
@@ -25,7 +27,6 @@ class _CategoriesScreenState extends State<CategoriesScreen>
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-
     _animationController.forward();
   }
 
@@ -35,8 +36,10 @@ class _CategoriesScreenState extends State<CategoriesScreen>
     super.dispose();
   }
 
-  void _selectCategory(BuildContext context, Category mdlCategory) {
-    final arrFilteredMeals = widget.availableMeals
+  void _selectCategory(
+      BuildContext context, Category mdlCategory, WidgetRef ref) {
+    final arrFilteredMeals = ref
+        .watch(filteredMealsProvider)
         .where((objMeal) => objMeal.arrCategories.contains(mdlCategory.strId))
         .toList();
 
@@ -68,7 +71,7 @@ class _CategoriesScreenState extends State<CategoriesScreen>
               CategoryGridItem(
                   mdlCategory: mdlCategory,
                   onSelectCategory: () {
-                    _selectCategory(context, mdlCategory);
+                    _selectCategory(context, mdlCategory, ref);
                   })
           ],
         ),

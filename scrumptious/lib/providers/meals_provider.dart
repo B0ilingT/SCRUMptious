@@ -1,15 +1,25 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/data/temp_meals.dart';
+import 'package:scrumptious/models/meal.dart';
 
-final tempMealsProvider = Provider<List<Meal>>((ref) => tempMeals);
+final mealsProvider = Provider((ref) {
+  return tempMeals;
+});
 
-class MealsNotifier extends StateNotifier<List<Meal>> {
-  MealsNotifier(List<Meal> meals) : super(meals);
+class TempMealsNotifier extends StateNotifier<List<Meal>> {
+  TempMealsNotifier()
+      : super(
+          tempMeals.toList(),
+        );
+
+  void addMeal(Meal mdlMeal) {
+    state.add(mdlMeal);
+  }
+
+  void updateMeals(List<Meal> newMeals) {
+    state = [...state, ...newMeals];
+  }
 }
 
-final mealsProvider =
-    StateNotifierProvider.family<MealsNotifier, List<Meal>, void>((ref, _) {
-  final meals = ref.watch(tempMealsProvider);
-  return MealsNotifier(meals);
-});
+final tempMealProvider = StateNotifierProvider<TempMealsNotifier, List<Meal>>(
+    (ref) => TempMealsNotifier());
