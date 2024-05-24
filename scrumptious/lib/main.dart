@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -73,7 +72,7 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
   Future<void> _saveMeals(WidgetRef ref) async {
     final String mealDataString = jsonEncode(ref
-        .watch(tempMealProvider)
+        .watch(mealProvider)
         .where((meal) => !meal.arrCategories.contains('c-1'))
         .map((meal) => meal.toJson())
         .toList());

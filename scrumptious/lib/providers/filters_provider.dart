@@ -42,7 +42,7 @@ final filtersProvider =
         (ref) => FiltersNotifier());
 
 final filteredMealsProvider = Provider<List<Meal>>((ref) {
-  final tempMeals = ref.watch(tempMealProvider);
+  final tempMeals = ref.watch(mealProvider);
   final activeFilters = ref.watch(filtersProvider);
   return tempMeals.where((meal) {
     if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {

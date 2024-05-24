@@ -189,7 +189,7 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen> {
       bIsUnder30Mins: intDuration < 30,
       bIsUnder1Hour: intDuration < 60,
     );
-    ref.read(tempMealProvider.notifier).updateMeals([newMeal]);
+    ref.read(mealProvider.notifier).updateMeals([newMeal]);
     Navigator.of(context).pop();
   }
 
