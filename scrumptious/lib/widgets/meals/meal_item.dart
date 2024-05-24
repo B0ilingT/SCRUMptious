@@ -60,7 +60,7 @@ class MealItem extends StatelessWidget {
                 height: 200,
                 width: double.infinity,
                 imageErrorBuilder: (context, error, stackTrace) {
-                  return const Center(child: Icon(Icons.error));
+                  return Image.asset('assets/placeholder.jpg');
                 },
               ),
             ),

@@ -80,12 +80,18 @@ class MealDetailsScreen extends ConsumerWidget {
                         height: 300,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset('assets/placeholder.jpg');
+                        },
                       )
                     : Image.asset(
                         mdlMeal.strImageUrl,
                         height: 300,
                         width: double.infinity,
                         fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset('assets/placeholder.jpg');
+                        },
                       )),
             const SizedBox(height: 14),
             Text(
