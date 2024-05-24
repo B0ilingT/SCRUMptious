@@ -15,6 +15,19 @@ enum Affordability {
   luxurious,
 }
 
+String getAffordabilitySign(Affordability enumAffordability) {
+  switch (enumAffordability) {
+    case Affordability.affordable:
+      return '£';
+    case Affordability.pricey:
+      return '££';
+    case Affordability.luxurious:
+      return '£££';
+    default:
+      return '';
+  }
+}
+
 Affordability stringToAffordability(String str) {
   return Affordability.values.firstWhere((e) => e.toString() == str,
       orElse: () => Affordability.affordable);

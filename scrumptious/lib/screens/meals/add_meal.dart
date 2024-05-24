@@ -7,6 +7,7 @@ import 'package:logging/logging.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scrumptious/models/meal.dart';
 
 final _logger = Logger('AddMealScreen');
 
@@ -16,7 +17,15 @@ class AddMealScreen extends StatefulWidget {
   State<AddMealScreen> createState() => _AddMealScreenState();
 }
 
+String capitalizeFirstLetter(String text) {
+  if (text.isEmpty) {
+    return text;
+  }
+  return text[0].toUpperCase() + text.substring(1);
+}
+
 class _AddMealScreenState extends State<AddMealScreen> {
+  List<String> steps = [''];
   File? image;
   PaletteGenerator? paletteGenerator;
   Future pickImage() async {
@@ -64,8 +73,12 @@ class _AddMealScreenState extends State<AddMealScreen> {
 
     if (croppedFile != null) {
       final file = File(croppedFile.path);
+      final newPalette = await PaletteGenerator.fromImageProvider(
+        FileImage(file),
+      );
       setState(() {
         image = file;
+        paletteGenerator = newPalette;
       });
     }
   }
@@ -78,6 +91,12 @@ class _AddMealScreenState extends State<AddMealScreen> {
       255 - color.blue,
       1,
     );
+  }
+
+  void addStep() {
+    setState(() {
+      steps.add('');
+    });
   }
 
   @override
@@ -139,41 +158,91 @@ class _AddMealScreenState extends State<AddMealScreen> {
             const TextField(
               style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
-                labelText: 'Title',
+                labelText: 'Name:',
                 labelStyle: TextStyle(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 16.0),
-            DropdownButtonFormField<String>(
-              decoration: const InputDecoration(
-                labelText: 'Category',
-                labelStyle: TextStyle(color: Colors.white),
-              ),
-              items: availableCategories.map((category) {
-                return DropdownMenuItem(
-                  value: category.strId,
-                  child: Text(category.strTitle,
-                      style: const TextStyle(color: Colors.white)),
-                );
-              }).toList(),
-              onChanged: (value) {},
-            ),
-            const SizedBox(height: 16.0),
             const SizedBox(height: 16.0),
             Row(
               children: [
-                IconButton(
-                  icon: const Icon(Icons.camera),
-                  onPressed: () async {
-                    await pickImage();
-                  },
+                Expanded(
+                  flex: 3,
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Category',
+                      labelStyle: TextStyle(color: Colors.white),
+                    ),
+                    items: availableCategories.map((category) {
+                      return DropdownMenuItem(
+                        value: category.strId,
+                        child: Text(category.strTitle,
+                            style: const TextStyle(color: Colors.white)),
+                      );
+                    }).toList(),
+                    onChanged: (value) {},
+                  ),
                 ),
-                const SizedBox(width: 8.0),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  flex: 2,
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Price',
+                      labelStyle: TextStyle(color: Colors.white),
+                    ),
+                    items: Affordability.values.map((affordability) {
+                      return DropdownMenuItem(
+                        value: affordability.name,
+                        child: Text(getAffordabilitySign(affordability),
+                            style: const TextStyle(color: Colors.white)),
+                      );
+                    }).toList(),
+                    onChanged: (value) {},
+                  ),
+                ),
+                const SizedBox(width: 12.0),
+                Expanded(
+                  flex: 3,
+                  child: DropdownButtonFormField<String>(
+                    decoration: const InputDecoration(
+                      labelText: 'Difficulty',
+                      labelStyle: TextStyle(color: Colors.white),
+                    ),
+                    items: Complexity.values.map((complexity) {
+                      return DropdownMenuItem(
+                        value: complexity.name,
+                        child: Text(capitalizeFirstLetter(complexity.name),
+                            style: const TextStyle(color: Colors.white)),
+                      );
+                    }).toList(),
+                    onChanged: (value) {},
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
                 const Expanded(
                   child: TextField(
                     style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
-                      labelText: 'Steps',
+                      labelText: 'Ingredients:',
+                      labelStyle: TextStyle(color: Colors.white),
+                    ),
+                    maxLines: null,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16.0),
+            Row(
+              children: [
+                const Expanded(
+                  child: TextField(
+                    style: TextStyle(color: Colors.white),
+                    decoration: InputDecoration(
+                      labelText: 'Steps:',
                       labelStyle: TextStyle(color: Colors.white),
                     ),
                     maxLines: null,
