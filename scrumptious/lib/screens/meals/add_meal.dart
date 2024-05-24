@@ -1,9 +1,10 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logging/logging.dart';
+import 'package:palette_generator/palette_generator.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -17,6 +18,7 @@ class AddMealScreen extends StatefulWidget {
 
 class _AddMealScreenState extends State<AddMealScreen> {
   File? image;
+  PaletteGenerator? paletteGenerator;
   Future pickImage() async {
     try {
       final pickedImage =
@@ -24,19 +26,58 @@ class _AddMealScreenState extends State<AddMealScreen> {
       if (pickedImage == null) return;
       final imageTemp = File(pickedImage.path);
 
-      // Get the directory to save the image
-
       final directory = await getApplicationDocumentsDirectory();
       final path = directory.path;
-      final imagePath = '$path/assets/${DateTime.now().toIso8601String()}.png';
+      final imageDirectory = Directory('$path/assets');
+      if (!await imageDirectory.exists()) {
+        await imageDirectory.create(recursive: true);
+      }
+      final imagePath =
+          '${imageDirectory.path}/${DateTime.now().toIso8601String()}.png';
 
-      // Copy the image to the new path
-      // final newImage = await imageTemp.copy(imagePath); broken
+      final newImage = await imageTemp.copy(imagePath);
+      final newPalette = await PaletteGenerator.fromImageProvider(
+        FileImage(newImage),
+      );
 
-      // setState(() => this.image = newImage);
+      setState(() {
+        image = newImage;
+        paletteGenerator = newPalette;
+      });
     } on PlatformException catch (e) {
       _logger.warning('Failed to pick image: $e');
     }
+  }
+
+  Future<void> _cropImage() async {
+    ImageCropper imageCropper = ImageCropper();
+    final croppedFile = await imageCropper.cropImage(
+      sourcePath: image!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+    );
+
+    if (croppedFile != null) {
+      final file = File(croppedFile.path);
+      setState(() {
+        image = file;
+      });
+    }
+  }
+
+  Color get iconColor {
+    final color = paletteGenerator?.dominantColor?.color ?? Colors.white;
+    return Color.fromRGBO(
+      255 - color.red,
+      255 - color.green,
+      255 - color.blue,
+      1,
+    );
   }
 
   @override
@@ -49,9 +90,40 @@ class _AddMealScreenState extends State<AddMealScreen> {
         padding: const EdgeInsets.all(16.0),
         child: Column(
           children: [
+            if (image != null)
+              Stack(
+                children: <Widget>[
+                  Image.file(
+                    image!,
+                    fit: BoxFit.cover,
+                    width: double.infinity, // make it cover the entire width
+                    height: MediaQuery.of(context).size.height *
+                        0.3, // adjust the height as needed
+                  ),
+                  Positioned(
+                    right: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.crop, color: iconColor),
+                      onPressed: _cropImage,
+                    ),
+                  ),
+                  Positioned(
+                    left: 0,
+                    bottom: 0,
+                    child: IconButton(
+                      icon: Icon(Icons.delete, color: iconColor),
+                      onPressed: () {
+                        setState(() {
+                          image = null;
+                        });
+                      },
+                    ),
+                  ),
+                ],
+              ),
             const TextField(
-              style:
-                  TextStyle(color: Colors.white), // Set the text color to white
+              style: TextStyle(color: Colors.white),
               decoration: InputDecoration(
                 labelText: 'Title',
                 labelStyle: TextStyle(color: Colors.white),
@@ -76,7 +148,6 @@ class _AddMealScreenState extends State<AddMealScreen> {
             const SizedBox(height: 16.0),
             Row(
               children: [
-                if (image != null) Image.file(image!),
                 IconButton(
                   icon: const Icon(Icons.camera),
                   onPressed: () async {
@@ -86,8 +157,7 @@ class _AddMealScreenState extends State<AddMealScreen> {
                 const SizedBox(width: 8.0),
                 const Expanded(
                   child: TextField(
-                    style: TextStyle(
-                        color: Colors.white), // Set the text color to white
+                    style: TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       labelText: 'Steps',
                       labelStyle: TextStyle(color: Colors.white),
