@@ -1,5 +1,5 @@
 # SCRUMptious
-SCRUMptious is an app focused around discovering new recipes. This was created as part of a course to learn flutter and dart.
+SCRUMptious is an app focused around discovering and storing your favourite recipes.
 
 ## Features:
 - Clicking on a category takes you to a list of meals with a preview for each meal. This displays a picture with affordability, complexity and time descriptions/icons underneath.
