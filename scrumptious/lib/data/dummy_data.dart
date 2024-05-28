@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 
-
 const availableCategories = [
   Category(
     strId: 'c1',
@@ -68,7 +67,6 @@ const dummyMeals = [
     enumComplexity: Complexity.simple,
     strImageUrl:
         'assets/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
-        //'https://upload.wikimedia.org/wikipedia/commons/thumb/2/20/Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg/800px-Spaghetti_Bolognese_mit_Parmesan_oder_Grana_Padano.jpg',
     intDuration: 20,
     arrIngredients: [
       '4 Tomatoes',
@@ -91,6 +89,11 @@ const dummyMeals = [
     bIsVegan: true,
     bIsVegetarian: true,
     bIsLactoseFree: true,
+    bIsNutFree: true,
+    bIsHighProtein: false,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: true,
   ),
   Meal(
     strId: 'm2',
@@ -100,8 +103,7 @@ const dummyMeals = [
     strTitle: 'Hawaii toast',
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
-    strImageUrl:
-        'assets/toast-3532016_1280.jpg',
+    strImageUrl: 'assets/toast-3532016_1280.jpg',
     intDuration: 10,
     arrIngredients: [
       '1 Slice White Bread',
@@ -119,6 +121,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: false,
     bIsLactoseFree: false,
+    bIsNutFree: true,
+    bIsHighProtein: false,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: true,
   ),
   Meal(
     strId: 'm3',
@@ -129,8 +136,7 @@ const dummyMeals = [
     strTitle: 'Classic Hamburger',
     enumAffordability: Affordability.pricey,
     enumComplexity: Complexity.simple,
-    strImageUrl:
-        'assets/burger-500054_1280.jpg',
+    strImageUrl: 'assets/burger-500054_1280.jpg',
     intDuration: 45,
     arrIngredients: [
       '300g Cattle Hack',
@@ -151,6 +157,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: false,
     bIsLactoseFree: true,
+    bIsNutFree: true,
+    bIsHighProtein: true,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: false,
   ),
   Meal(
     strId: 'm4',
@@ -160,8 +171,7 @@ const dummyMeals = [
     strTitle: 'Wiener Schnitzel',
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.challenging,
-    strImageUrl:
-        'assets/schnitzel-3279045_1280.jpg',
+    strImageUrl: 'assets/schnitzel-3279045_1280.jpg',
     intDuration: 60,
     arrIngredients: [
       '8 Veal Cutlets',
@@ -186,6 +196,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: false,
     bIsLactoseFree: false,
+    bIsNutFree: true,
+    bIsHighProtein: true,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: false,
+    bIsUnder30Mins: false,
   ),
   Meal(
     strId: 'm5',
@@ -197,8 +212,7 @@ const dummyMeals = [
     strTitle: 'Salad with Smoked Salmon',
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.simple,
-    strImageUrl:
-        'assets/smoked-salmon-salad-1768890_1280.jpg',
+    strImageUrl: 'assets/smoked-salmon-salad-1768890_1280.jpg',
     intDuration: 15,
     arrIngredients: [
       'Arugula',
@@ -222,6 +236,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: true,
     bIsLactoseFree: true,
+    bIsNutFree: true,
+    bIsHighProtein: true,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: true,
   ),
   Meal(
     strId: 'm6',
@@ -232,8 +251,7 @@ const dummyMeals = [
     strTitle: 'Delicious Orange Mousse',
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.hard,
-    strImageUrl:
-        'assets/pastry-2274750_1280.jpg',
+    strImageUrl: 'assets/pastry-2274750_1280.jpg',
     intDuration: 240,
     arrIngredients: [
       '4 Sheets of Gelatine',
@@ -256,8 +274,13 @@ const dummyMeals = [
     ],
     bIsGlutenFree: true,
     bIsVegan: false,
-    bIsVegetarian: true,
+    bIsVegetarian: false,
     bIsLactoseFree: false,
+    bIsNutFree: true,
+    bIsHighProtein: false,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: false,
+    bIsUnder30Mins: false,
   ),
   Meal(
     strId: 'm7',
@@ -267,8 +290,7 @@ const dummyMeals = [
     strTitle: 'Pancakes',
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.simple,
-    strImageUrl:
-        'assets/pancake-3529653_1280.jpg',
+    strImageUrl: 'assets/pancake-3529653_1280.jpg',
     intDuration: 20,
     arrIngredients: [
       '1 1/2 Cups all-purpose Flour',
@@ -289,6 +311,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: true,
     bIsLactoseFree: false,
+    bIsNutFree: true,
+    bIsHighProtein: false,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: true,
   ),
   Meal(
     strId: 'm8',
@@ -298,8 +325,7 @@ const dummyMeals = [
     strTitle: 'Creamy Indian Chicken Curry',
     enumAffordability: Affordability.pricey,
     enumComplexity: Complexity.challenging,
-    strImageUrl:
-        'assets/indian-food-3482749_1280.jpg',
+    strImageUrl: 'assets/indian-food-3482749_1280.jpg',
     intDuration: 35,
     arrIngredients: [
       '4 Chicken Breasts',
@@ -322,6 +348,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: false,
     bIsLactoseFree: true,
+    bIsNutFree: true,
+    bIsHighProtein: true,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: false,
   ),
   Meal(
     strId: 'm9',
@@ -331,8 +362,7 @@ const dummyMeals = [
     strTitle: 'Chocolate Souffle',
     enumAffordability: Affordability.affordable,
     enumComplexity: Complexity.hard,
-    strImageUrl:
-        'assets/souffle-412785_1280.jpg',
+    strImageUrl: 'assets/souffle-412785_1280.jpg',
     intDuration: 45,
     arrIngredients: [
       '1 Teaspoon melted Butter',
@@ -371,6 +401,11 @@ const dummyMeals = [
     bIsVegan: false,
     bIsVegetarian: true,
     bIsLactoseFree: false,
+    bIsNutFree: true,
+    bIsHighProtein: false,
+    bIsLowCalorie: false,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: false,
   ),
   Meal(
     strId: 'm10',
@@ -382,8 +417,7 @@ const dummyMeals = [
     strTitle: 'Asparagus Salad with Cherry Tomatoes',
     enumAffordability: Affordability.luxurious,
     enumComplexity: Complexity.simple,
-    strImageUrl:
-        'assets/asparagus-3304997_1280.jpg',
+    strImageUrl: 'assets/asparagus-3304997_1280.jpg',
     intDuration: 30,
     arrIngredients: [
       'White and Green Asparagus',
@@ -405,5 +439,10 @@ const dummyMeals = [
     bIsVegan: true,
     bIsVegetarian: true,
     bIsLactoseFree: true,
+    bIsNutFree: false,
+    bIsHighProtein: false,
+    bIsLowCalorie: true,
+    bIsUnder1Hour: true,
+    bIsUnder30Mins: false,
   ),
 ];

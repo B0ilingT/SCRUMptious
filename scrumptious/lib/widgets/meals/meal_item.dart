@@ -6,13 +6,10 @@ import 'package:transparent_image/transparent_image.dart';
 
 class MealItem extends StatelessWidget {
   const MealItem(
-    {
-      super.key,
+      {super.key,
       required this.mdlMeal,
       required this.mdlCategory,
-      required this.onSelectMeal
-    }
-  );
+      required this.onSelectMeal});
 
   final Meal mdlMeal;
   final Category mdlCategory;
@@ -24,6 +21,10 @@ class MealItem extends StatelessWidget {
   }
 
   String get affordabilityText {
+    if (mdlMeal.arrCategories.contains('c-1')) {
+      return '';
+    }
+
     switch (mdlMeal.enumAffordability) {
       case Affordability.affordable:
         return '£';
@@ -39,9 +40,7 @@ class MealItem extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.all(8),
       surfaceTintColor: mdlCategory.colour,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8)
-      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
       clipBehavior: Clip.hardEdge,
       elevation: 2,
       child: InkWell(
@@ -53,58 +52,59 @@ class MealItem extends StatelessWidget {
             Hero(
               tag: mdlMeal.strId,
               child: FadeInImage(
-                placeholder: MemoryImage(kTransparentImage), 
-                image: AssetImage(mdlMeal.strImageUrl),
+                placeholder: MemoryImage(kTransparentImage),
+                image: mdlMeal.arrCategories.contains('c-1')
+                    ? NetworkImage(mdlMeal.strImageUrl)
+                    : AssetImage(mdlMeal.strImageUrl) as ImageProvider<Object>,
                 fit: BoxFit.cover,
                 height: 200,
                 width: double.infinity,
+                imageErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset('assets/placeholder.jpg');
+                },
               ),
             ),
             Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              child: Container(
-                color: mdlCategory.colour.withOpacity(0.75),
-                padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
-                child: Column(
-                  children: [
-                    Text(
-                      mdlMeal.strTitle,
-                      maxLines: 2,
-                      textAlign: TextAlign.center,
-                      softWrap: true,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: Container(
+                  color: mdlCategory.colour.withOpacity(0.75),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 44),
+                  child: Column(
+                    children: [
+                      Text(
+                        mdlMeal.strTitle,
+                        maxLines: 2,
+                        textAlign: TextAlign.center,
+                        softWrap: true,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 12),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        MealItemTrait(
-                          icon: Icons.schedule, 
-                          strLabel: '${mdlMeal.intDuration.toString()}m'
-                        ),
-                        const SizedBox(width: 12),
-                        MealItemTrait(
-                          icon: Icons.assessment_outlined, 
-                          strLabel: complexityText
-                        ),
-                        const SizedBox(width: 12),
-                        MealItemTrait(
-                          icon: Icons.remove, 
-                          strLabel: affordabilityText
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              )
-            ),
+                      const SizedBox(height: 12),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MealItemTrait(
+                              icon: Icons.schedule,
+                              strLabel: '${mdlMeal.intDuration.toString()}m'),
+                          const SizedBox(width: 12),
+                          MealItemTrait(
+                              icon: Icons.assessment_outlined,
+                              strLabel: complexityText),
+                          const SizedBox(width: 12),
+                          MealItemTrait(
+                              icon: Icons.remove, strLabel: affordabilityText),
+                        ],
+                      )
+                    ],
+                  ),
+                )),
           ],
         ),
       ),
