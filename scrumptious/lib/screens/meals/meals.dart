@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
+import 'package:scrumptious/providers/meals_provider.dart';
 import 'package:scrumptious/screens/meals/meal_details.dart';
 import 'package:scrumptious/screens/meals/scrape_meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item.dart';
@@ -37,6 +40,35 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
       context: context,
       builder: (ctx) => const ScrapeMeal(),
       isScrollControlled: true,
+    );
+  }
+
+  Future<void> _showMultiSelect(BuildContext context, Meal mdlMeal) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return MultiSelectDialog(
+          title:
+              const Text('Categories:', style: TextStyle(color: Colors.white)),
+          confirmText:
+              const Text('Confirm', style: TextStyle(color: Colors.white)),
+          cancelText:
+              const Text('Cancel', style: TextStyle(color: Colors.white)),
+          itemsTextStyle: const TextStyle(color: Colors.white),
+          selectedItemsTextStyle: const TextStyle(color: Colors.white),
+          items: availableCategories
+              .map((category) =>
+                  MultiSelectItem(category.strId, category.strTitle))
+              .toList(),
+          initialValue: mdlMeal.arrCategories,
+          onConfirm: (values) {
+            setState(() {
+              mdlMeal.arrCategories.addAll(values.cast<String>());
+            });
+            ref.read(mealProvider.notifier).updateMeals([mdlMeal]);
+          },
+        );
+      },
     );
   }
 
@@ -110,36 +142,47 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
                   IconTheme(
                     data: const IconThemeData(size: 50),
                     child: SlidableAction(
-                      icon: Icons.delete,
-                      onPressed: (context) {
-                        final removedMeal = widget.arrMeals[index];
-                        final removedMealIndex = index;
-                        widget.arrMeals[index].arrCategories
-                            .remove(widget.mdlCategory.strId);
-
-                        setState(() {
-                          widget.arrMeals.removeAt(index);
-                        });
-                        ScaffoldMessenger.of(context).clearSnackBars();
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(
-                                "Meal was removed from ${widget.mdlCategory.strTitle}"),
-                            action: SnackBarAction(
-                              label: 'UNDO',
-                              onPressed: () {
-                                setState(() {
-                                  removedMeal.arrCategories
-                                      .add(widget.mdlCategory.strId);
-                                  widget.arrMeals
-                                      .insert(removedMealIndex, removedMeal);
-                                });
-                              },
+                      icon: widget.mdlCategory.strId == 'c-1'
+                          ? Icons.add
+                          : Icons.delete,
+                      onPressed: (context) async {
+                        final meal = widget.arrMeals[index];
+                        if (widget.mdlCategory.strId == 'c-1') {
+                          await _showMultiSelect(context, meal);
+                          // ScaffoldMessenger.of(context).showSnackBar(
+                          //   const SnackBar(
+                          //     content: Text("Meal added successfully"),
+                          //   ),
+                          // );
+                        } else {
+                          final removedMealIndex = index;
+                          meal.arrCategories.remove(widget.mdlCategory.strId);
+                          setState(() {
+                            widget.arrMeals.removeAt(index);
+                          });
+                          ScaffoldMessenger.of(context).clearSnackBars();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text(
+                                  "Meal was removed from ${widget.mdlCategory.strTitle}"),
+                              action: SnackBarAction(
+                                label: 'UNDO',
+                                onPressed: () {
+                                  setState(() {
+                                    meal.arrCategories
+                                        .add(widget.mdlCategory.strId);
+                                    widget.arrMeals
+                                        .insert(removedMealIndex, meal);
+                                  });
+                                },
+                              ),
                             ),
-                          ),
-                        );
+                          );
+                        }
                       },
-                      backgroundColor: const Color.fromARGB(171, 255, 0, 0),
+                      backgroundColor: widget.mdlCategory.strId == 'c-1'
+                          ? Colors.blue
+                          : const Color.fromARGB(171, 255, 0, 0),
                       foregroundColor: Colors.white,
                     ),
                   ),
