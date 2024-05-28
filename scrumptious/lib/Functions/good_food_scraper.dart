@@ -213,6 +213,8 @@ Complexity mapStringToComplexity(String complexityString) {
       return Complexity.challenging;
     case 'a-challenge':
       return Complexity.hard;
+    case 'a challenge':
+      return Complexity.hard;
     default:
       throw ArgumentError('Invalid complexity string: $complexityString');
   }

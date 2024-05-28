@@ -147,13 +147,16 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
                           : Icons.delete,
                       onPressed: (context) async {
                         final meal = widget.arrMeals[index];
+                        final scaffoldMessenger = ScaffoldMessenger.of(context);
                         if (widget.mdlCategory.strId == 'c-1') {
                           await _showMultiSelect(context, meal);
-                          // ScaffoldMessenger.of(context).showSnackBar(
-                          //   const SnackBar(
-                          //     content: Text("Meal added successfully"),
-                          //   ),
-                          // );
+                          if (mounted) {
+                            scaffoldMessenger.showSnackBar(
+                              const SnackBar(
+                                content: Text("Meal added successfully"),
+                              ),
+                            );
+                          }
                         } else {
                           final removedMealIndex = index;
                           meal.arrCategories.remove(widget.mdlCategory.strId);
