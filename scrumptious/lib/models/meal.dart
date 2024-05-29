@@ -1,36 +1,15 @@
+import 'package:scrumptious/data/globals.dart';
+
 enum Complexity {
   simple,
   challenging,
   hard,
 }
 
-Complexity stringToComplexity(String str) {
-  return Complexity.values
-      .firstWhere((e) => e.toString() == str, orElse: () => Complexity.simple);
-}
-
 enum Affordability {
   affordable,
   pricey,
   luxurious,
-}
-
-String getAffordabilitySign(Affordability enumAffordability) {
-  switch (enumAffordability) {
-    case Affordability.affordable:
-      return '£';
-    case Affordability.pricey:
-      return '££';
-    case Affordability.luxurious:
-      return '£££';
-    default:
-      return '';
-  }
-}
-
-Affordability stringToAffordability(String str) {
-  return Affordability.values.firstWhere((e) => e.toString() == str,
-      orElse: () => Affordability.affordable);
 }
 
 class Meal {

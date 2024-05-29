@@ -9,6 +9,7 @@ import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:palette_generator/palette_generator.dart';
 import 'package:scrumptious/data/dummy_data.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:scrumptious/data/globals.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:scrumptious/providers/meals_provider.dart';
@@ -19,13 +20,6 @@ class AddMealScreen extends ConsumerStatefulWidget {
   const AddMealScreen({super.key});
   @override
   ConsumerState<AddMealScreen> createState() => _AddMealScreenState();
-}
-
-String capitalizeFirstLetter(String text) {
-  if (text.isEmpty) {
-    return text;
-  }
-  return text[0].toUpperCase() + text.substring(1);
 }
 
 class _AddMealScreenState extends ConsumerState<AddMealScreen> {
@@ -309,7 +303,7 @@ class _AddMealScreenState extends ConsumerState<AddMealScreen> {
                       items: Complexity.values.map((complexity) {
                         return DropdownMenuItem(
                           value: complexity,
-                          child: Text(capitalizeFirstLetter(complexity.name),
+                          child: Text(capitalizeString(complexity.name),
                               style: const TextStyle(color: Colors.white)),
                         );
                       }).toList(),

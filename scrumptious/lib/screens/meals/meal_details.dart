@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
+import 'package:scrumptious/data/globals.dart';
 
 class MealDetailsScreen extends ConsumerStatefulWidget {
   const MealDetailsScreen(
@@ -35,20 +36,6 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen>
   void dispose() {
     _controller.dispose();
     super.dispose();
-  }
-
-  String getAffordabilityText(Meal mdlMeal) {
-    if (mdlMeal.arrCategories.contains('c-1')) {
-      return '';
-    }
-
-    String strName = mdlMeal.enumAffordability.name;
-    return '${strName[0].toUpperCase()}${strName.substring(1)}';
-  }
-
-  String getComplexityText(Meal mdlMeal) {
-    String strName = mdlMeal.enumComplexity.name;
-    return '${strName[0].toUpperCase()}${strName.substring(1)}';
   }
 
   String _getStepText(String strStep) {

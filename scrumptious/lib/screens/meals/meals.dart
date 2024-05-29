@@ -44,6 +44,10 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
   }
 
   Future<void> _showMultiSelect(BuildContext context, Meal mdlMeal) async {
+    if (mdlMeal.arrCategories.contains('c-1')) {
+      mdlMeal.arrCategories.remove('c-1');
+    }
+
     await showDialog(
       context: context,
       builder: (ctx) {

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:scrumptious/data/globals.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/meals_provider.dart';
 
@@ -44,34 +45,5 @@ final filtersProvider =
 final filteredMealsProvider = Provider<List<Meal>>((ref) {
   final tempMeals = ref.watch(mealProvider);
   final activeFilters = ref.watch(filtersProvider);
-  return tempMeals.where((meal) {
-    if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {
-      return false;
-    }
-    if (activeFilters[Filter.lactoseFree]! && !meal.bIsLactoseFree) {
-      return false;
-    }
-    if (activeFilters[Filter.vegetarian]! && !meal.bIsVegetarian) {
-      return false;
-    }
-    if (activeFilters[Filter.vegan]! && !meal.bIsVegan) {
-      return false;
-    }
-    if (activeFilters[Filter.nutFree]! && !meal.bIsNutFree) {
-      return false;
-    }
-    if (activeFilters[Filter.highProtein]! && !meal.bIsHighProtein) {
-      return false;
-    }
-    if (activeFilters[Filter.lowCalorie]! && !meal.bIsLowCalorie) {
-      return false;
-    }
-    if (activeFilters[Filter.under30Mins]! && !meal.bIsUnder30Mins) {
-      return false;
-    }
-    if (activeFilters[Filter.under1Hour]! && !meal.bIsUnder1Hour) {
-      return false;
-    }
-    return true;
-  }).toList();
+  return filterMeals(tempMeals, activeFilters);
 });

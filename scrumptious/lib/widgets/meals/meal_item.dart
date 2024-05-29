@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:scrumptious/data/globals.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/widgets/meals/meal_item_trait.dart';
@@ -14,26 +15,6 @@ class MealItem extends StatelessWidget {
   final Meal mdlMeal;
   final Category mdlCategory;
   final void Function(Meal mdlMeal) onSelectMeal;
-
-  String get complexityText {
-    String strName = mdlMeal.enumComplexity.name;
-    return '${strName[0].toUpperCase()}${strName.substring(1)}';
-  }
-
-  String get affordabilityText {
-    if (mdlMeal.arrCategories.contains('c-1')) {
-      return '';
-    }
-
-    switch (mdlMeal.enumAffordability) {
-      case Affordability.affordable:
-        return '£';
-      case Affordability.pricey:
-        return '££';
-      case Affordability.luxurious:
-        return '£££';
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -96,10 +77,12 @@ class MealItem extends StatelessWidget {
                           const SizedBox(width: 12),
                           MealItemTrait(
                               icon: Icons.assessment_outlined,
-                              strLabel: complexityText),
+                              strLabel: getComplexityText(mdlMeal)),
                           const SizedBox(width: 12),
                           MealItemTrait(
-                              icon: Icons.remove, strLabel: affordabilityText),
+                              icon: Icons.remove,
+                              strLabel: getAffordabilitySign(
+                                  mdlMeal.enumAffordability)),
                         ],
                       )
                     ],
