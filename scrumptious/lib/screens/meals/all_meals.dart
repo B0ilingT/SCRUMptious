@@ -27,7 +27,6 @@ class _AllMealsScreenState extends ConsumerState<AllMealsScreen> {
     Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => MealDetailsScreen(
               mdlMeal: mdlMeal,
-              addMeal: (Meal meal) {},
             )));
   }
 
@@ -210,7 +209,6 @@ class MealSearch extends SearchDelegate<void> {
                     MaterialPageRoute(
                       builder: (context) => MealDetailsScreen(
                         mdlMeal: meal,
-                        addMeal: (Meal meal) {},
                       ),
                     ),
                   );
@@ -235,7 +233,6 @@ class MealSearch extends SearchDelegate<void> {
                     MaterialPageRoute(
                       builder: (context) => MealDetailsScreen(
                         mdlMeal: meal,
-                        addMeal: (Meal meal) {},
                       ),
                     ),
                   );

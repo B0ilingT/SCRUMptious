@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:multi_select_flutter/multi_select_flutter.dart';
+import 'package:scrumptious/data/dummy_data.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
 import 'package:scrumptious/data/globals.dart';
+import 'package:scrumptious/providers/meals_provider.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 class MealDetailsScreen extends ConsumerStatefulWidget {
-  const MealDetailsScreen(
-      {super.key, required this.mdlMeal, required this.addMeal});
+  const MealDetailsScreen({super.key, required this.mdlMeal});
 
   final Meal mdlMeal;
-  final void Function(Meal) addMeal;
 
   @override
   ConsumerState<MealDetailsScreen> createState() => _MealDetailsScreenState();
@@ -43,6 +45,35 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen>
     return '$intStepNumber. $strStep';
   }
 
+  Future<void> _showMultiSelect(BuildContext context, Meal mdlMeal) async {
+    await showDialog(
+      context: context,
+      builder: (ctx) {
+        return MultiSelectDialog(
+          title:
+              const Text('Categories:', style: TextStyle(color: Colors.white)),
+          confirmText:
+              const Text('Confirm', style: TextStyle(color: Colors.white)),
+          cancelText:
+              const Text('Cancel', style: TextStyle(color: Colors.white)),
+          itemsTextStyle: const TextStyle(color: Colors.white),
+          selectedItemsTextStyle: const TextStyle(color: Colors.white),
+          items: availableCategories
+              .map((category) =>
+                  MultiSelectItem(category.strId, category.strTitle))
+              .toList(),
+          initialValue: mdlMeal.arrCategories,
+          onConfirm: (values) {
+            setState(() {
+              mdlMeal.arrCategories.addAll(values.cast<String>());
+            });
+            ref.read(mealProvider.notifier).updateMeals([mdlMeal]);
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final favouriteMeals = ref.watch(favouriteMealsProvider);
@@ -55,12 +86,16 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen>
           widget.mdlMeal.arrCategories.length == 1 &&
                   widget.mdlMeal.arrCategories[0] == 'c-1'
               ? IconButton(
-                  onPressed: () {
-                    widget.addMeal(widget.mdlMeal);
-                    ScaffoldMessenger.of(context).clearSnackBars();
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text("Meal added!"),
-                    ));
+                  onPressed: () async {
+                    final scaffoldMessenger = ScaffoldMessenger.of(context);
+                    await _showMultiSelect(context, widget.mdlMeal);
+                    if (mounted) {
+                      scaffoldMessenger.showSnackBar(
+                        const SnackBar(
+                          content: Text("Meal added successfully"),
+                        ),
+                      );
+                    }
                   },
                   icon: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
@@ -103,26 +138,19 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen>
           children: [
             Hero(
               tag: widget.mdlMeal.strId,
-              child: widget.mdlMeal.arrCategories.length == 1 &&
-                      widget.mdlMeal.arrCategories[0] == 'c-1'
-                  ? Image.network(
-                      widget.mdlMeal.strImageUrl,
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/placeholder.jpg');
-                      },
-                    )
-                  : Image.asset(
-                      widget.mdlMeal.strImageUrl,
-                      height: 300,
-                      width: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) {
-                        return Image.asset('assets/placeholder.jpg');
-                      },
-                    ),
+              child: FadeInImage(
+                placeholder: MemoryImage(kTransparentImage),
+                image: widget.mdlMeal.arrCategories.contains('c-1')
+                    ? NetworkImage(widget.mdlMeal.strImageUrl)
+                    : AssetImage(widget.mdlMeal.strImageUrl)
+                        as ImageProvider<Object>,
+                fit: BoxFit.fitWidth,
+                height: 300,
+                width: double.infinity,
+                imageErrorBuilder: (context, error, stackTrace) {
+                  return Image.asset('assets/placeholder.jpg');
+                },
+              ),
             ),
             const SizedBox(height: 14),
             Row(
@@ -183,49 +211,55 @@ class _MealDetailsScreenState extends ConsumerState<MealDetailsScreen>
                       const SizedBox(height: 14),
                       FadeTransition(
                         opacity: animation,
-                        child: SizedBox(
-                          width: double.infinity / 2,
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.center,
-                                getAffordabilityText(widget.mdlMeal),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        fontWeight: FontWeight.bold),
+                        child: getAffordabilityText(widget.mdlMeal).isEmpty
+                            ? const SizedBox
+                                .shrink() // Render an empty SizedBox if the text is empty
+                            : SizedBox(
+                                width: double.infinity / 2,
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      getAffordabilityText(widget.mdlMeal),
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground,
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                       FadeTransition(
                         opacity: animation,
-                        child: SizedBox(
-                          width: double.infinity,
-                          child: Card(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                textAlign: TextAlign.center,
-                                getComplexityText(widget.mdlMeal),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge!
-                                    .copyWith(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .onBackground,
-                                        fontWeight: FontWeight.bold),
+                        child: getComplexityText(widget.mdlMeal).isEmpty
+                            ? const SizedBox
+                                .shrink() // Render an empty SizedBox if the text is empty
+                            : SizedBox(
+                                width: double.infinity,
+                                child: Card(
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      getComplexityText(widget.mdlMeal),
+                                      textAlign: TextAlign.center,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!
+                                          .copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .onBackground,
+                                              fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                        ),
                       ),
                       for (var entry in {
                         'Gluten Free': widget.mdlMeal.bIsGlutenFree,

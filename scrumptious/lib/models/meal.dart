@@ -13,7 +13,7 @@ enum Affordability {
 }
 
 class Meal {
-  const Meal({
+  Meal({
     required this.strId,
     required this.arrCategories,
     required this.strTitle,
@@ -38,7 +38,7 @@ class Meal {
   final String strId;
   final List<String> arrCategories;
   final String strTitle;
-  final String strImageUrl;
+  String strImageUrl;
   final List<String> arrIngredients;
   final List<String> arrSteps;
   final int intDuration;

@@ -55,7 +55,7 @@ const availableCategories = [
   ),
 ];
 
-const dummyMeals = [
+List<Meal> dummyMeals = [
   Meal(
     strId: 'm1',
     arrCategories: [
