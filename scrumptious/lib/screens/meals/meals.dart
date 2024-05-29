@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:multi_select_flutter/multi_select_flutter.dart';
 import 'package:scrumptious/data/dummy_data.dart';
-import 'package:scrumptious/data/temp_meals.dart';
 import 'package:scrumptious/models/category.dart';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/favourites_provider.dart';
@@ -27,8 +26,6 @@ class MealsScreen extends ConsumerStatefulWidget {
 }
 
 class _MealsScreenState extends ConsumerState<MealsScreen> {
-  final List<Meal> _arrMeals = [];
-
   @override
   void initState() {
     super.initState();
@@ -44,6 +41,10 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
   }
 
   Future<void> _showMultiSelect(BuildContext context, Meal mdlMeal) async {
+    if (mdlMeal.arrCategories.contains('c-1')) {
+      mdlMeal.arrCategories.remove('c-1');
+    }
+
     await showDialog(
       context: context,
       builder: (ctx) {
@@ -72,17 +73,9 @@ class _MealsScreenState extends ConsumerState<MealsScreen> {
     );
   }
 
-  void _addMeal(Meal mdlMeal) {
-    setState(() {
-      _arrMeals.add(mdlMeal);
-    });
-    addMeal(mdlMeal);
-  }
-
   void selectMeal(BuildContext context, Meal mdlMeal) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (ctx) =>
-            MealDetailsScreen(mdlMeal: mdlMeal, addMeal: _addMeal)));
+        builder: (ctx) => MealDetailsScreen(mdlMeal: mdlMeal)));
   }
 
   @override

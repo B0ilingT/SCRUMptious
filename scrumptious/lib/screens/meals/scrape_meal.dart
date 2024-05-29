@@ -23,7 +23,6 @@ class _ScrapeMealState extends State<ScrapeMeal>
   bool showFilters = false;
   List<Meal> _arrMeals = [];
   Future<void>? _searchFuture;
-  final _titleController = TextEditingController();
   Map<Filter, bool> activeFilters = {
     Filter.glutenFree: false,
     Filter.lactoseFree: false,
@@ -36,6 +35,7 @@ class _ScrapeMealState extends State<ScrapeMeal>
     Filter.under1Hour: false
   };
 
+  final _titleController = TextEditingController();
   late AnimationController _controller;
   late Animation<Offset> _offsetAnimation;
 
@@ -91,39 +91,6 @@ class _ScrapeMealState extends State<ScrapeMeal>
     }
   }
 
-  List<Meal> filterMeals(List<Meal> arrMeals) {
-    return arrMeals.where((meal) {
-      if (activeFilters[Filter.glutenFree]! && !meal.bIsGlutenFree) {
-        return false;
-      }
-      if (activeFilters[Filter.lactoseFree]! && !meal.bIsLactoseFree) {
-        return false;
-      }
-      if (activeFilters[Filter.vegetarian]! && !meal.bIsVegetarian) {
-        return false;
-      }
-      if (activeFilters[Filter.vegan]! && !meal.bIsVegan) {
-        return false;
-      }
-      if (activeFilters[Filter.nutFree]! && !meal.bIsNutFree) {
-        return false;
-      }
-      if (activeFilters[Filter.highProtein]! && !meal.bIsHighProtein) {
-        return false;
-      }
-      if (activeFilters[Filter.lowCalorie]! && !meal.bIsLowCalorie) {
-        return false;
-      }
-      if (activeFilters[Filter.under30Mins]! && !meal.bIsUnder30Mins) {
-        return false;
-      }
-      if (activeFilters[Filter.under1Hour]! && !meal.bIsUnder1Hour) {
-        return false;
-      }
-      return true;
-    }).toList();
-  }
-
   void updateFilter(Filter filterType, bool newValue) {
     setState(() {
       activeFilters[filterType] = newValue;
@@ -151,6 +118,9 @@ class _ScrapeMealState extends State<ScrapeMeal>
           color: Theme.of(context).colorScheme.background,
           width: double.infinity,
           child: SingleChildScrollView(
+            physics: showFilters
+                ? const AlwaysScrollableScrollPhysics()
+                : const NeverScrollableScrollPhysics(),
             clipBehavior: Clip.hardEdge,
             child: Container(
               width: width,

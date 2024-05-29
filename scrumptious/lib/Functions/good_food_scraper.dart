@@ -1,19 +1,13 @@
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as htmlparser;
 import 'package:html/dom.dart' as htmldom;
+import 'package:scrumptious/data/globals.dart';
 import 'dart:convert';
 import 'package:scrumptious/models/meal.dart';
 import 'package:scrumptious/providers/filters_provider.dart';
 import 'package:logging/logging.dart';
 
 final _logger = Logger('GoodFoodScraper');
-
-String capitalize(String s) {
-  if (s.isEmpty) {
-    return s;
-  }
-  return s[0].toUpperCase() + s.substring(1);
-}
 
 final filterMapping = {
   Filter.vegan: 'vegan',
@@ -26,6 +20,57 @@ final filterMapping = {
   Filter.under30Mins: 'lt-1800',
   Filter.under1Hour: 'lt-3600',
 };
+
+List<String> parseIngredients(List<htmldom.Element> arrIngredientElements) {
+  final List<String> arrIngredients = [];
+  for (final ingredientElement in arrIngredientElements) {
+    final ingredientAnchor = ingredientElement.querySelector('a');
+    String ingredient;
+
+    if (ingredientAnchor != null) {
+      ingredient = ingredientAnchor.text.trim();
+    } else {
+      ingredient = ingredientElement.text.trim();
+    }
+
+    ingredient = ingredient.replaceAll(RegExp(r',\s*$'), '');
+    ingredient = ingredient.replaceAll(',', ' -');
+    if (ingredient.isNotEmpty) {
+      ingredient = capitalizeString(ingredient);
+      arrIngredients.add(ingredient);
+    }
+  }
+  return arrIngredients;
+}
+
+List<String> parseSteps(List<htmldom.Element> arrStepElements) {
+  final List<String> arrSteps = [];
+  for (final stepElement in arrStepElements) {
+    final stepNumber = stepElement.querySelector('.heading-6')?.text ?? '';
+    final stepContent =
+        stepElement.querySelector('.editor-content')?.text ?? '';
+    final step = '$stepNumber: $stepContent';
+    final cleanedStep = step.replaceFirst(RegExp(r'STEP \d+: '), '');
+    final steps = cleanedStep.split('.').where((s) => s.trim().isNotEmpty);
+    arrSteps.addAll(steps);
+  }
+  return arrSteps;
+}
+
+Complexity mapStringToComplexity(String complexityString) {
+  switch (complexityString.toLowerCase()) {
+    case 'easy':
+      return Complexity.simple;
+    case 'more effort':
+      return Complexity.challenging;
+    case 'a-challenge':
+      return Complexity.hard;
+    case 'a challenge':
+      return Complexity.hard;
+    default:
+      throw ArgumentError('Invalid complexity string: $complexityString');
+  }
+}
 
 Future<List<Meal>> scrapeBBCGoodFood(
     String searchTerm, int intResults, bool bIsRandom,
@@ -79,8 +124,8 @@ Future<List<Meal>> scrapeBBCGoodFood(
               items.shuffle();
             }
             for (final meal in items) {
-              final List<String> arrSteps = [];
-              final List<String> arrIngredients = [];
+              List<String> arrSteps = [];
+              List<String> arrIngredients = [];
               int intDuration = 0;
               Complexity enumComplexity = Complexity.simple;
               bool bIsGlutenFree = false;
@@ -125,23 +170,8 @@ Future<List<Meal>> scrapeBBCGoodFood(
                 final methodStepsElement =
                     innerDocument.querySelector('.recipe__method-steps');
                 if (methodStepsElement != null) {
-                  final List<htmldom.Element> stepElements =
-                      methodStepsElement.querySelectorAll('li');
-
-                  for (final stepElement in stepElements) {
-                    final stepNumber =
-                        stepElement.querySelector('.heading-6')?.text ?? '';
-                    final stepContent =
-                        stepElement.querySelector('.editor-content')?.text ??
-                            '';
-                    final step = '$stepNumber: $stepContent';
-                    final cleanedStep =
-                        step.replaceFirst(RegExp(r'STEP \d+: '), '');
-                    final steps = cleanedStep
-                        .split('.')
-                        .where((s) => s.trim().isNotEmpty);
-                    arrSteps.addAll(steps);
-                  }
+                  arrSteps =
+                      parseSteps(methodStepsElement.querySelectorAll('li'));
                 } else {
                   continue;
                 }
@@ -149,27 +179,8 @@ Future<List<Meal>> scrapeBBCGoodFood(
                 final ingredientsElement =
                     innerDocument.querySelector('.recipe__ingredients');
                 if (ingredientsElement != null) {
-                  final List<htmldom.Element> ingredientElements =
-                      ingredientsElement.querySelectorAll('li');
-
-                  for (final ingredientElement in ingredientElements) {
-                    final ingredientAnchor =
-                        ingredientElement.querySelector('a');
-                    String ingredient;
-
-                    if (ingredientAnchor != null) {
-                      ingredient = ingredientAnchor.text.trim();
-                    } else {
-                      ingredient = ingredientElement.text.trim();
-                    }
-
-                    ingredient = ingredient.replaceAll(RegExp(r',\s*$'), '');
-                    ingredient = ingredient.replaceAll(',', ' -');
-                    if (ingredient.isNotEmpty) {
-                      ingredient = capitalize(ingredient);
-                      arrIngredients.add(ingredient);
-                    }
-                  }
+                  arrIngredients = parseIngredients(
+                      ingredientsElement.querySelectorAll('li'));
                 } else {
                   continue;
                 }
@@ -203,19 +214,4 @@ Future<List<Meal>> scrapeBBCGoodFood(
     _logger.severe('Exception: $e', e, s);
   }
   return meals;
-}
-
-Complexity mapStringToComplexity(String complexityString) {
-  switch (complexityString.toLowerCase()) {
-    case 'easy':
-      return Complexity.simple;
-    case 'more effort':
-      return Complexity.challenging;
-    case 'a-challenge':
-      return Complexity.hard;
-    case 'a challenge':
-      return Complexity.hard;
-    default:
-      throw ArgumentError('Invalid complexity string: $complexityString');
-  }
 }

@@ -73,7 +73,7 @@ class AppState extends ConsumerState<App> with WidgetsBindingObserver {
   Future<void> _saveMeals(WidgetRef ref) async {
     final String mealDataString = jsonEncode(ref
         .watch(mealProvider)
-        .where((meal) => !meal.arrCategories.contains('c-1'))
+        .where((meal) => meal.arrCategories != ['c-1'])
         .map((meal) => meal.toJson())
         .toList());
     await storage.write(key: 'meals', value: mealDataString);
