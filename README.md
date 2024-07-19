@@ -9,18 +9,33 @@ SCRUMptious is an app focused around discovering and storing your favourite reci
 
 ## Video Walkthrough
 
-https://github.com/B0ilingT/SCRUMptious/assets/121681434/3d94ba3a-ace8-4cf2-bbd3-91319326a49d
+https://github.com/user-attachments/assets/ed1dbba9-0509-4aeb-8170-4da61a01d624
 
 ## Images
 
 ### Landing Page / Categories Screen
-<img src="https://github.com/B0ilingT/SCRUMptious/assets/121681434/d9d441d9-a7e4-45fd-b558-9349d25ddaef" width="294.75" height="639">
+<img src="https://github.com/user-attachments/assets/375e8585-4e49-4f8e-9449-d6e65986310e" width="294.75" height="639">
 
 ### Meals Page (Quick & Easy as Selected Category)
 <img src="https://github.com/B0ilingT/SCRUMptious/assets/121681434/4661e986-2258-44d6-a4b5-980e1d295bba" width="294.75" height="639">
 
+#### Slider (Add Favourite)
+<img src="https://github.com/user-attachments/assets/c22981d9-80f3-44c9-9263-ca0ec870119c" width="294.75" height="639">
+
+#### Slider (Delete)
+<img src="https://github.com/user-attachments/assets/bb05839b-12f7-4c31-87af-e8c583ec918c" width="294.75" height="639">
+
+#### Add Meal
+<img src="https://github.com/user-attachments/assets/93416e0c-c25d-4911-bdcc-92e4943b14ad" width="294.75" height="639">
+
+#### Search Screen
+<img src="https://github.com/user-attachments/assets/1dda70f6-aa28-479d-9ed1-990aa9a6d60c" width="294.75" height="639">
+
+#### Results screen
+<img src="https://github.com/user-attachments/assets/51d4edf3-413c-43d9-8a7a-610437d7d480" width="294.75" height="639">
+
 ### Meals Details Page (Spaghetti)
-<img src="https://github.com/B0ilingT/SCRUMptious/assets/121681434/68fe1601-f7f8-4bd2-a889-df0733e23c03" width="294.75" height="639">
+<img src="https://github.com/user-attachments/assets/d211c83d-0614-43f2-9f74-ce66932eaad3" width="294.75" height="639">
 
 ### Favourites Page
 <img src="https://github.com/B0ilingT/SCRUMptious/assets/121681434/3e18e56e-f134-4e73-aea2-47cec25c5648" width="294.75" height="639">
