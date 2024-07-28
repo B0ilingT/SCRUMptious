@@ -3,10 +3,12 @@ SCRUMptious is an app focused around discovering and storing your favourite reci
 
 ## Features:
 - Clicking on a category takes you to a list of meals with a preview for each meal. This displays a picture with affordability, complexity and time descriptions/icons underneath.
+- Pressing the search icon in the bottom drawer allows you to search the internet for meals matching your dietary and time preferences
+- Swiping left or right on a meal item allows you to either delete or favourite that meal
 - Clicking a meal brings the user to a more detailed description of the meal and the recipe which includes ingredients and a step by step guide
 - When viewing a meal the user can add it to favourites with the favourite button in the top right. Giving the user easier access to this recipe from the 'splash' screen.
 - Opening the side drawer from the categories page allows the user to apply filters such as: Vegetarian, Vegan, Lactose-Free and Gluten-Free. These options allow the user to view only suitable meals for these restrictions.
-
+- Opening the side drawer also allows you to add a meal to a category with your own image, description, filters, steps and also allows the user to set time and price of the meal 
 ## Video Walkthrough
 
 https://github.com/user-attachments/assets/ed1dbba9-0509-4aeb-8170-4da61a01d624
